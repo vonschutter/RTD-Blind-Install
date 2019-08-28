@@ -1,0 +1,272 @@
+#!/bin/bash
+#::             RTD System System Managment Script
+#::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+#::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+#:: Author:     Stephan S. 
+#:: Version 1.00
+#::
+#::
+#:: Purpose: The purpose of the script is to facilitate generating an unattended installation iso file for installing 
+#::          Ubuntu Linux or any of the derivatives thereof.
+#::  
+#:: This script will: 
+#::  - Download the latest installation image
+#::  - Patch the instllation image with the instructions to complete an install
+#::  - The instructios will encrypt the hrddrive and perform a standard installation. Other software will be added later.
+#::   
+#::
+#::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+#::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+
+
+#::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+#::::::::::::::                                          ::::::::::::::::::::::
+#::::::::::::::          Script Settings                 ::::::::::::::::::::::
+#::::::::::::::                                          ::::::::::::::::::::::
+#::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+# Variables that govern the behavior or the script and location of files are 
+# set here. There should be no reason to change any of this to setup and 
+# get a working Minecraft server on Ubuntu. However, if you have updated scripts
+# and need to download yours from someplace else you only need to change these 
+# setings. 
+
+source /opt/rtd/scripts/_rtd_functions
+
+# List of all files required to complete the tasks that this script uses. 
+
+# Set default release version... 
+RELEASE=disco
+
+TARGET_ISO_FILE_NAME=$RELEASE-netinstall-auto.iso
+SOURCE_ISO_URL="http://archive.ubuntu.com/ubuntu/dists/$RELEASE/main/installer-amd64/current/images/netboot/mini.iso"
+SSH_PUBLIC_KEY_FILE="$HOME/.ssh/id_rsa.pub"
+PUT_ISO_FILE_HERE_WHEN_DONE="$HOME"
+VOLUME_TITLE="RTD Ubuntu Auto Installer"
+COMPLETION_MESSAGE="Your ISO image is ready! It is placed in the folder: $PUT_ISO_FILE_HERE_WHEN_DONE Next steps: Add the ISO to a bootable USB (for example MULTIBOOT from Pendrive Linux), or if you are using Virtual Machines select the ISO as install media and install system, login as the temporary user, adjust passwords for the encrypted volume and login... "
+DIALOGRC="`pwd`/custom/dialogrc-rtd"
+
+
+
+#::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+#::::::::::::::                                          ::::::::::::::::::::::
+#::::::::::::::          Script Functions                ::::::::::::::::::::::
+#::::::::::::::                                          ::::::::::::::::::::::
+#::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+#
+
+
+
+
+function prepare_environment_for_iso_creation () {
+    # Facilitate showing collorfull statements in terminal... 
+    set_colors
+    #Include the path to where the isofile will be put... 
+    TARGET_ISO="$PUT_ISO_FILE_HERE_WHEN_DONE/$TARGET_ISO_FILE_NAME"
+    # Ensure that all needed software, outside of the most rudimantary, 
+    # is available to us... If not, the script should exit. 
+    _DEPENDENCIES="dos2unix cpio gzip genisoimage whois pwgen wget fakeroot xorriso"
+    #set -e
+    for i in $_DEPENDENCIES 
+    do 
+        check_dependencies $i
+    done
+
+    # Find full paths for the binaries needed since if they are recently 
+    # added, they may not be found in the current $PATH
+    : "${BIN_7Z:=$(type -P 7z)}"
+    : "${BIN_XORRISO:=$(type -P xorriso)}"
+    : "${BIN_CPIO:=$(type -P gnucpio || type -P cpio)}"
+
+    # find the location of the public key on this machine...
+    # This should be updated to create a key if not there... 
+    if [ ! -f "$SSH_PUBLIC_KEY_FILE" ];
+    then
+        echo "Error: public SSH key $SSH_PUBLIC_KEY_FILE not found!"
+        # exit 1
+    fi
+
+    # Setup the required folder structure... 
+    CURRENT_DIR="`pwd`"
+    SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+    TMP_DOWNLOAD_DIR="`mktemp -d`"
+    TMP_DISC_DIR="`mktemp -d`"
+    TMP_INITRD_DIR="`mktemp -d`"
+}
+
+
+function download_and_manipulate_iso () {
+    # This is a simple command sequence to read the preference of distribution to install
+    # and what release to get... then download the network install file from ubuntu
+    # and manipulate the iso file to complete the edited instruction in the preseed.cfg... 
+    RELEASE=$1
+    PREFERENCE=$2
+    TARGET_ISO=$PUT_ISO_FILE_HERE_WHEN_DONE/$PREFERENCE-$TARGET_ISO_FILE_NAME
+    cd "$TMP_DOWNLOAD_DIR"
+    wget -4 "$SOURCE_ISO_URL" -O "./netboot.iso"
+    "$BIN_7Z" x "./netboot.iso" "-o$TMP_DISC_DIR"
+    cd "$TMP_DISC_DIR"
+    dos2unix "./isolinux.cfg"
+    patch -p1 -i "$SCRIPT_DIR/custom/boot-menu.patch"   
+    cat "$SCRIPT_DIR/custom/preseed.template" > "$SCRIPT_DIR/custom/preseed.cfg"
+    sed -i s/oem-replace-me-desktop-selection/$PREFERENCE/g "$SCRIPT_DIR/custom/preseed.cfg"
+    cd "$TMP_INITRD_DIR"
+    cp "$SCRIPT_DIR/custom/preseed.cfg" "./preseed.cfg"
+    cp "$SSH_PUBLIC_KEY_FILE" "./custom/userkey.pub"
+    cp "$SCRIPT_DIR/custom/ssh-host-keygen.service" "./custom/ssh-host-keygen.service"
+    cd "$TMP_INITRD_DIR"
+    cat "$TMP_DISC_DIR/initrd.gz" | gzip -d > "./initrd"
+    echo "./preseed.cfg" | fakeroot "$BIN_CPIO" -o -H newc -A -F "./initrd"
+    find "./custom" | fakeroot "$BIN_CPIO" -o -H newc -A -F "./initrd"
+    cat "./initrd" | gzip -9c > "$TMP_DISC_DIR/initrd.gz"
+
+}
+
+
+function create_iso_image (){
+    # Delete old iso file if there... 
+    if [ -f "$TARGET_ISO" ]; then
+            rm -f "$TARGET_ISO"
+    fi
+
+    cd "$TMP_DISC_DIR"
+    rm -r '[BOOT]'
+    "$BIN_XORRISO" -as mkisofs -r -V "$VOLUME_TITLE" -J -b isolinux.bin -c boot.cat -no-emul-boot -boot-load-size 4 -boot-info-table -input-charset utf-8 -isohybrid-mbr "$SCRIPT_DIR/custom/isohdpfx.bin" -eltorito-alt-boot -e boot/grub/efi.img -no-emul-boot -isohybrid-gpt-basdat -o "$TARGET_ISO" ./
+    chmod 777 "$TARGET_ISO"
+}
+
+
+function cleanup_and_finish () {
+            # go back to initial directory
+            cd "$CURRENT_DIR"
+            # Cleanup folder structure...
+            rm -r "$TMP_DOWNLOAD_DIR"
+            rm -r "$TMP_DISC_DIR"
+            rm -r "$TMP_INITRD_DIR"
+            # Print completion message and instructions... 
+            dialog --backtitle "RTD OEM System Builder" --title "DONE" --msgbox "$COMPLETION_MESSAGE" 10 60
+            clear
+}
+
+
+
+function _show_gui () {
+    # "dialog" will be used to request interactive configuration...
+    # Ensure that it is available: 
+    check_dependencies dialog
+    cat "$DIALOGRC" >~/.dialogrc
+
+    CLEANUP="rm -f ~/.dialogrc"
+    BRANDING="RTD: Simple System Management Tool"
+    DIALOG_CANCEL=1
+    DIALOG_ESC=255
+    HEIGHT=0
+    WIDTH=0
+
+    # List Options to be available for choice in the RTD System Configurator...
+        while true; do
+        exec 3>&1
+        selection=$(dialog \
+            --backtitle "$BRANDING" --title "Menu" --clear --cancel-label "Exit" --menu "Creating the ISO file is comple, what do you want to do now?:" 0 0 4 \
+            "1" "Genterate an Automatic Standard Ubuntu Installer ISO (Burn to CD, USB, or use with VM)" \
+            "2" "Genterate an Automatic KDE      Ubuntu Installer ISO (Burn to CD, USB, or use with VM)" \
+            "3" "Genterate an Automatic Gnome    Ubuntu Installer ISO (Burn to CD, USB, or use with VM)" \
+            2>&1 1>&3)
+        exit_status=$?
+        exec 3>&-
+        case $exit_status in
+            $DIALOG_CANCEL)
+            clear
+            rm -f ~/.dialogrc
+            echo "Program terminated."
+            exit
+            ;;
+            $DIALOG_ESC)
+            clear
+            rm -f ~/.dialogrc
+            echo "Program aborted." >&2
+            exit 1
+            ;;
+        esac
+        case $selection in
+            0 )
+            clear
+            echo "Program terminated by user..."
+            ;;
+            1 )
+            clear
+            prepare_environment_for_iso_creation
+            download_and_manipulate_iso $RELEASE ubuntu-desktop 
+            create_iso_image
+            cleanup_and_finish
+            clear
+             ;;
+            2 )
+            clear
+            prepare_environment_for_iso_creation
+            download_and_manipulate_iso $RELEASE kubuntu-desktop
+            create_iso_image
+            cleanup_and_finish
+            clear
+            ;;
+            3 )
+            clear
+            prepare_environment_for_iso_creation
+            download_and_manipulate_iso $RELEASE ubuntu-gnome-desktop
+            create_iso_image
+            cleanup_and_finish
+            clear
+            ;;
+        esac
+        done   
+}
+
+
+function make_qcow2 () {
+    set -e
+    check_dependencies qemu-img
+    check_dependencies kvm
+    # lookup specific binaries
+    : "${BIN_QEMU_IMG:=$(type -P qemu-img)}"
+    : "${BIN_KVM:=$(type -P kvm)}"
+
+    # get parameters
+    RAM_SIZE=${1:-"2048"}
+    DISK_SIZE=${2:-"10G"}
+    DISK_FORMAT=${3:-"qcow2"}
+    DISK_FILE=${5:-"`pwd`/TARGET_ISO_FILE_NAME-$RAM_SIZE-$DISK_SIZE.$DISK_FORMAT"}
+
+    # Verify ISO presesnce
+        if [ -f "$TARGET_ISO" ]; then
+                dialog --backtitle "$BRANDING" --title "DONE" --msgbox "OOOPS! You did a booboo... you have to first choose to create an ISO in the menu" 10 60
+                clear
+                exit
+        fi
+
+    # create image and run installer
+    "$BIN_QEMU_IMG" create "$DISK_FILE" -f "$DISK_FORMAT" "$DISK_SIZE"
+    "$BIN_KVM" -m "$RAM_SIZE" -cdrom "$TARGET_ISO" -boot once=d "$DISK_FILE"
+
+    # remove tmp
+    rm -r -f "$TMP_ISO_DIR"
+
+}
+
+#::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+#::::::::::::::                                          ::::::::::::::::::::::
+#::::::::::::::          Script Executive                ::::::::::::::::::::::
+#::::::::::::::                                          ::::::::::::::::::::::
+#::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+clear
+
+# Execute the steps to create a new automatic ubuntu based installation ISO. 
+# To skip a step, simply momment out the funcion call you want to exclude below:
+#
+#
+esure_admin
+_show_gui
+
+# Clear the screen on exit... 
+clear
+
