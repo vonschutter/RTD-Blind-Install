@@ -107,14 +107,14 @@ function download_and_manipulate_iso () {
     "$BIN_7Z" x "./netboot.iso" "-o$TMP_DISC_DIR"
     cd "$TMP_DISC_DIR"
     dos2unix "./isolinux.cfg"
-    patch -p1 -i "$SCRIPT_DIR/custom/boot-menu.patch"   
+    patch -p1 -i "$SCRIPT_DIR/custom/boot-menu.patch"
     cat "$SCRIPT_DIR/custom/preseed.template" > "$SCRIPT_DIR/custom/preseed.cfg"
     sed -i s/oem-replace-me-desktop-selection/$PREFERENCE/g "$SCRIPT_DIR/custom/preseed.cfg"
     cd "$TMP_INITRD_DIR"
+    mkdir custom
     cp "$SCRIPT_DIR/custom/preseed.cfg" "./preseed.cfg"
     cp "$SSH_PUBLIC_KEY_FILE" "./custom/userkey.pub"
     cp "$SCRIPT_DIR/custom/ssh-host-keygen.service" "./custom/ssh-host-keygen.service"
-    cd "$TMP_INITRD_DIR"
     cat "$TMP_DISC_DIR/initrd.gz" | gzip -d > "./initrd"
     echo "./preseed.cfg" | fakeroot "$BIN_CPIO" -o -H newc -A -F "./initrd"
     find "./custom" | fakeroot "$BIN_CPIO" -o -H newc -A -F "./initrd"
@@ -265,6 +265,7 @@ clear
 #
 #
 esure_admin
+PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1"
 _show_gui
 
 # Clear the screen on exit... 
