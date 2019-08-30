@@ -1,7 +1,6 @@
 # Blind_Install (Automatic network install ISO creator)
-```
 ![RTD Blind Install Media Builder](custom/rtd-mc.png?raw=true "Executing the Script")
-```
+
 Automatic Ubuntu/Kubuntu network install ISO creator.
 
 Makes an ISO (Virtual CD) that will blindly install the Ubuntu flavor of choice on to a PC or a VM, no questions asked. 
