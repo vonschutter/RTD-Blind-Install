@@ -9,7 +9,8 @@ All chices have been made for you:
  ```
 1 - All configuration decissions have been set to sensible ones
 2 - Full disk encryption is enabled by default
-!WARNING!  The PC that is booted from this media will be wiped completely! There will be no prompt or warning! 
+!WARNING!  The PC that is booted from this media will be wiped completely! 
+           There will be no prompt or warning! 
 
 The installation media (ISO) vill be placed in your home folder. 
  ```
