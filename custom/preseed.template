@@ -337,9 +337,8 @@ rm -r /target/custom;
 
 
 d-i preseed/late_command string in-target apt-get update ; \
-                                in-target sh -c 'eject || true'; \
- 				in-target sh -c '/usr/bin/mkdir -p --mode=0755 /opt/rtd/scripts' ; \
-				in-target sh -c '/usr/bin/wget --no-check-certificate https://github.com/vonschutter/RTD-Build/raw/master/rtd-me.sh.cmd -O /opt/rtd/scripts/rtd-me.sh.cmd' ; \
+ 				in-target sh -c 'mkdir -pv --mode=0755 /opt/rtd/scripts' ; \
+				in-target sh -c 'wget https://github.com/vonschutter/RTD-Build/raw/master/rtd-me.sh.cmd -O /opt/rtd/scripts/rtd-me.sh.cmd' ; \
 				in-target sh -c 'echo completed > /opt/rtd/status.ok ;
 
 d-i debian-installer/splash boolean true
@@ -348,7 +347,7 @@ d-i debian-installer/splash boolean true
 d-i cdrom-detect/eject boolean true
 
 # Option to forcefully eject the installation media:
-d-i preseed/late_command string in-target sh -c 'eject || true'; 
+d-i preseed/late_command string in-target sh -c 'eject || true';
 
 # --------------------------------------------------- #
 
