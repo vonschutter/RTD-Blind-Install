@@ -338,9 +338,9 @@ d-i pkgsel/update-policy select unattended-upgrades
 
 
 d-i preseed/late_command string in-target apt-get update ; 
-d-i preseed/late_command string	in-target sh -c 'mkdir -pv --mode=0755 /opt/rtd/scripts' ; 
-d-i preseed/late_command string	in-target sh -c 'wget https://github.com/vonschutter/RTD-Build/raw/master/rtd-me.sh.cmd -O /opt/rtd/scripts/rtd-me.sh.cmd' ; 
-d-i preseed/late_command string in-target sh -c 'echo completed > /opt/rtd/status.ok ;
+d-i preseed/late_command string in-target bash -c 'mkdir -pv --mode=0755 /opt/rtd/scripts' ; 
+d-i preseed/late_command string in-target bash -c 'wget https://github.com/vonschutter/RTD-Build/raw/master/rtd-me.sh.cmd -O /opt/rtd/scripts/rtd-me.sh.cmd' ; 
+d-i preseed/late_command string in-target bash -c 'echo completed > /rtd.status.ok ;
 
 d-i debian-installer/splash boolean true
 
