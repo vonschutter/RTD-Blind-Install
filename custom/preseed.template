@@ -305,7 +305,7 @@ d-i apt-setup/security_path string /ubuntu
 # --------------------------------------------------- #
 # Package selection
 # --------------------------------------------------- #
-tasksel tasksel/first multiselect ubuntu-desktop-minimal
+#tasksel tasksel/first multiselect ubuntu-desktop-minimal
 tasksel tasksel/first multiselect oem-replace-me-desktop-selection
 #tasksel tasksel/first multiselect kubuntu-desktop
 #tasksel tasksel/first multiselect ubuntu-gnome-desktop
