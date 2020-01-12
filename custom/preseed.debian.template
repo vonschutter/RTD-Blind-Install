@@ -1,12 +1,12 @@
 # --------------------------------------------------- #
-#       Preseed file for Ubuntu based systems  
+#       Preseed file for Debian based systems  
 # --------------------------------------------------- #
 #
-# This is a preseed template for use with automatically deploying Ubuntu to a wide
+# This is a preseed template for use with automatically deploying Debian to a wide
 # variety of endpoints. These instructions are tested to work with virtual machines
 # VirtualBox and KVM, as well as a wide range of physical hardware. It has not been tested with 
 # hardware that requires special raid or infiniband drivers to beloaded. If the install target can 
-# be seen by the OEM bootable media this instruction set will most likely work wiht no issue. 
+# be seen by the OEM bootable media this instruction set will most likely work with no issue. 
 #
 # All sections are documented as well as possible given time constraints. It should be trivial to 
 # read and understand what each seciton does and modify it accordingly. The intention is 
@@ -17,12 +17,12 @@
 # https://help.ubuntu.com/lts/installation-guide/example-preseed.txt
 #
 # Compatibility:
-# Tested with the Ubuntu netboot image:
-# http://archive.ubuntu.com/ubuntu/dists/disco/main/installer-amd64/current/images/netboot/mini.iso
+# Tested with the Debian net install image:
+# https://cdimage.debian.org/debian-cd/current/amd64/iso-cd/debian-10.2.0-amd64-netinst.iso
 # Other ISO sources will be tested in the future... 
 #
-# This preseed may work with the regular (non live) image:
-# http://cdimage.ubuntu.com/releases/19.04/release/ubuntu-19.04-server-amd64.iso
+# This preseed may work with other regular (non live) images. 
+# 
 #
 # It is presently unknown if the preseed will work with a live media or not. 
 #
@@ -112,11 +112,12 @@ d-i hw-detect/load_firmware boolean true
 # --------------------------------------------------- #
 # Mirror settings
 # --------------------------------------------------- #
+# If you select ftp, the mirror/country string does not need to be set.
 d-i mirror/protocol string ftp
 d-i mirror/country string manual
-# d-i mirror/http/hostname string archive.ubuntu.com
-# d-i mirror/http/directory string /ubuntu
-# d-i mirror/http/proxy string
+# d-i mirror/http/hostname string http.us.debian.org
+d-i mirror/http/directory string /debian
+d-i mirror/http/proxy string
 # --------------------------------------------------- #
 
 
@@ -293,25 +294,26 @@ d-i base-installer/kernel/image string linux-generic
 # --------------------------------------------------- #
 # Apt setup
 # --------------------------------------------------- #
-d-i apt-setup/restricted boolean true
-d-i apt-setup/universe boolean true
-d-i apt-setup/backports boolean true
-d-i apt-setup/use_mirror boolean false
+# You can choose to install non-free and contrib software.
+d-i apt-setup/non-free boolean true
+d-i apt-setup/contrib boolean true
 d-i apt-setup/services-select multiselect security, updates
-d-i apt-setup/security_host string security.ubuntu.com
-d-i apt-setup/security_path string /ubuntu
+d-i apt-setup/security_host string security.debian.org
+d-i apt-setup/multiarch string i386
 # --------------------------------------------------- #
 
 
 # --------------------------------------------------- #
 # Package selection
 # --------------------------------------------------- #
-#tasksel tasksel/first multiselect ubuntu-desktop-minimal
+#tasksel tasksel/first multiselect standard
 tasksel tasksel/first multiselect oem-replace-me-desktop-selection
-#tasksel tasksel/first multiselect kubuntu-desktop
-#tasksel tasksel/first multiselect ubuntu-gnome-desktop
-#tasksel tasksel/first multiselect lubuntu-desktop
-#tasksel tasksel/first multiselect ubuntu-mate-desktop
+#tasksel tasksel/first multiselect desktop
+#tasksel tasksel/first multiselect gnome-desktop
+#tasksel tasksel/first multiselect kde-desktop
+#tasksel tasksel/first multiselect cinnamon-desktop
+#tasksel tasksel/first multiselect mate-desktop
+#tasksel tasksel/first multiselect lxde-desktop
 d-i pkgsel/include string openssh-server
 d-i pkgsel/include string wget
 d-i pkgsel/include string virt-what
