@@ -1,1 +1,362 @@
+# --------------------------------------------------- #
+#       Preseed file for Ubuntu based systems  
+# --------------------------------------------------- #
+#
+# This is a preseed template for use with automatically deploying Ubuntu to a wide
+# variety of endpoints. These instructions are tested to work with virtual machines
+# VirtualBox and KVM, as well as a wide range of physical hardware. It has not been tested with 
+# hardware that requires special raid or infiniband drivers to beloaded. If the install target can 
+# be seen by the OEM bootable media this instruction set will most likely work wiht no issue. 
+#
+# All sections are documented as well as possible given time constraints. It should be trivial to 
+# read and understand what each seciton does and modify it accordingly. The intention is 
+# to provide a template that only requires a basic understanding of how Operating Systems (OS)
+# work. 
+#
+# This preseed id derived from: 
+# https://help.ubuntu.com/lts/installation-guide/example-preseed.txt
+#
+# Compatibility:
+# Tested with the Ubuntu netboot image:
+# http://archive.ubuntu.com/ubuntu/dists/disco/main/installer-amd64/current/images/netboot/mini.iso
+# Other ISO sources will be tested in the future... 
+#
+# This preseed may work with the regular (non live) image:
+# http://cdimage.ubuntu.com/releases/19.04/release/ubuntu-19.04-server-amd64.iso
+#
+# It is presently unknown if the preseed will work with a live media or not. 
+#
+# Authentication:
+# We recommend to use public key authentication. To enable this, modify the relevant text
+# in the "Addon Tasks" section at the end.
+#
+# Usage:
+# We recommend to use the build-iso.sh script to build an image with embedded
+# preseed and other required files. In that case the preseed file gets loaded
+# automatically and all additional files are available to the installer.
+#
+
+
+# --------------------------------------------------- #
+# Unattended Installation
+# --------------------------------------------------- #
+d-i auto-install/enable boolean true
+d-i debconf/priority select critical 
+# --------------------------------------------------- #
+
+
+# --------------------------------------------------- #
+# Install the KDE/Gnome oem-config frontend 
+# --------------------------------------------------- #
+# Instructions to tell the installer what front end to display. 
+# The default is to use a console based display with a light
+# Weight GUI. This is equally informative and stable. It is the 
+# prefferred option for unseen deployments, for example in a
+# cloud service like AWS or AZURE. However, if the installation 
+# will be seen by end users it may be preferable to show a modern 
+# GUI that users will recognize and not be intimidated by.
+#
+#d-i     oem-config-udeb/frontend        string kde
+#d-i     oem-config-udeb/frontend        string gnome
+# --------------------------------------------------- #
+
+
+
+# --------------------------------------------------- #
+# Localization
+# --------------------------------------------------- #
+d-i debian-installer/locale string en_US.UTF-8
+d-i localechooser/supported-locales multiselect en_US.UTF-8, se_SE.UTF-8
+d-i console-setup/ask_detect boolean false
+# --------------------------------------------------- #
+
+
+
+# --------------------------------------------------- #
+# Set Keyboard layout
+# --------------------------------------------------- #
+d-i keyboard-configuration/xkb-keymap select se
+d-i debian-installer/keymap select se
+d-i keymap select se
+#d-i console-setup/ask_detect boolean false
+#d-i console-setup/layoutcode string en
+#d-i keyboard-configuration/xkb-keymap select us
+#d-i keyboard-configuration/layoutcode string us
+# --------------------------------------------------- #
+
+
+
+# --------------------------------------------------- #
+# Network configuration
+# --------------------------------------------------- #
+d-i netcfg/choose_interface select auto
+d-i netcfg/hostname string device
+d-i netcfg/get_hostname string device
+d-i netcfg/get_domain string unnamed
+d-i hw-detect/load_firmware boolean true
+# If you want the preconfiguration file to work on systems both with and
+# without a dhcp server, uncomment these lines and the static network
+# configuration below.
+#d-i netcfg/dhcp_failed note
+#d-i netcfg/dhcp_options select Configure network manually
+# If you have a slow dhcp server and the installer times out waiting for
+# it, this might be useful.
+#d-i netcfg/dhcp_timeout string 60
+# netcfg will choose an interface that has link if possible. This makes it
+# skip displaying a list if there is more than one interface.
+#d-i     netcfg/choose_interface select auto
+# --------------------------------------------------- #
+
+
+
+# --------------------------------------------------- #
+# Mirror settings
+# --------------------------------------------------- #
+d-i mirror/protocol string ftp
+d-i mirror/country string manual
+# d-i mirror/http/hostname string archive.ubuntu.com
+# d-i mirror/http/directory string /ubuntu
+# d-i mirror/http/proxy string
+# --------------------------------------------------- #
+
+
+
+# --------------------------------------------------- #
+# Account setup (temporary user account)
+# --------------------------------------------------- #
+d-i passwd/root-login boolean false
+d-i passwd/user-fullname string Ubuntu User
+d-i passwd/username string tangarora
+d-i passwd/user-password-crypted password $6$Rn5/UTzjIs68MX$9gz8vmshGlPqse3VoX8dzSfhWxRVoYv1MB6aGRD8xdvztOf.gD.SxxVWkxYrwwbShB9Q14flquK/apbdQJ65t1
+# --------------------------------------------------- #
+
+
+
+# --------------------------------------------------- #
+# Clock and time zone setup
+# --------------------------------------------------- #
+d-i clock-setup/utc boolean true
+d-i time/zone string Etc/UTC
+d-i clock-setup/ntp boolean true
+d-i clock-setup/ntp-server string ntp.ubuntu.com
+# --------------------------------------------------- #
+
+
+
+# --------------------------------------------------- #
+# Do NOT install on the USB stick(!)
+# --------------------------------------------------- #
+#
+# The Debian installer will install on the first disk it finds which can
+# sometimes be the USB stick itself. Work around this by rolling our own auto
+# detect logic which disallows installing on USB devices.
+#
+# d-i partman/early_command \
+#    string debconf-set partman-auto/disk "$(echo /dev/`ls -l /sys/block/[hs]d* | grep -v "usb" | head -n1 | sed 's/^.*\([hs]d[a-z]\+\).*$/\1/'`)"
+#d-i partman/early_command \
+#    string debconf-set partman-auto/disk "\$(list-devices disk | head -n1)"
+#d-i partman/early_command string debconf-set partman-auto/disk "$(list-devices disk | grep -v `list-devices usb-partition`)"
+#d-i partman/early_command string \
+#USBDEV=$(list-devices usb-partition | sed "s/\(.*\)./\1/");\
+#BOOTDEV=$(list-devices disk | grep -v "$USBDEV" | head -1);\
+#debconf-set partman-auto/disk $BOOTDEV;\
+#debconf-set grub-installer/bootdev $BOOTDEV; 
+d-i partman/early_command string [ "$(ls -A /tmp)" ] && umount -l /media || echo "Empty" ;
+
+# d-i partman/early_command umount /media;
+# --------------------------------------------------- #
+
+# sed 's/.*\///'
+# sed 's#.*/##'
+
+# --------------------------------------------------- #
+# EFI
+# --------------------------------------------------- #
+#
+# The EFI (Extensible Firmware Interface) system partition is a partition on a data storage device.
+# UEFI provides backward compatibility with legacy systems by reserving the first block (sector) of 
+# the partition for compatibility code, effectively creating a legacy boot sector. On legacy BIOS-based 
+# systems, the first sector of a partition is loaded into memory and execution is transferred to this code. 
+# Here we tell setup to install EFI boot setup if possible so that both NEW and old systems may be handled
+# and the installed system can be started.
+d-i partman-efi/non_efi_system boolean true
+# --------------------------------------------------- #
+
+
+
+# --------------------------------------------------- #
+# Grub
+# --------------------------------------------------- #
+#
+# Tell the grub-installer to install to the MBR even if it also finds some other
+# OS, which is more likely to allow the newly installed Linux OS to boot without issue.
+d-i grub-installer/only_debian boolean true
+d-i grub-installer/with_other_os boolean true
+# --------------------------------------------------- #
+
+
+
+# --------------------------------------------------- #
+#   Disk layout   
+# --------------------------------------------------- #
+#
+## Set option to encrypt the hard disk:
+d-i partman-auto/method string crypto
+
+# Option to temporarily set full disk encryption password to automate the install below. 
+# If you prefer to be propmpted during the system installation process comment out the 
+# two crypto/passphrase options below. The disk encryption password can be changed at 
+# anytime once the system is installed using the following command: 
+#
+#		tool      :   command   : device and partition number
+#               cryptsetup luksChangeKey /dev/sda4 
+#
+#
+d-i partman-crypto/passphrase password letmein1234
+d-i partman-crypto/passphrase-again password letmein1234
+# DO Please remember to change this password after install!!!!
+
+# When disk encryption is enabled, skip wiping the partitions beforehand since it takes too much time.
+d-i partman-auto-crypto/erase_disks boolean false
+# Delete anything on the first hard drive, then define the actual layout of the disk 
+# using and encrypted LVM volume for security. 
+d-i partman-lvm/device_remove_lvm boolean true
+d-i partman-lvm/device_remove_lvm_span boolean true
+d-i partman-auto/purge_lvm_from_device boolean true
+d-i partman-lvm/confirm boolean true
+d-i partman-lvm/confirm_nooverwrite boolean true
+d-i partman-auto-lvm/guided_size string max
+d-i partman-auto-lvm/new_vg_name string crypt
+# Use vda & sda to ensure recipie is applied even if this installis run in a KVM VM.
+# d-i partman-auto/disk string /dev/sdb 
+d-i partman-auto/choose_recipe select root-encrypted
+d-i partman-auto/expert_recipe string                         \
+      root-encrypted ::                                       \
+                    538 538 1075 free                         \
+                    $primary                                  \
+                    $iflabel{ gpt }                           \
+                    $reusemethod{ }                           \
+                    method{ efi } format{ }                   \
+              .                                               \
+              500 500 500 ext3                                \
+                      $primary{ } $bootable{ }                \
+                      method{ format } format{ }              \
+                      use_filesystem{ } filesystem{ ext4 }    \
+                      mountpoint{ /boot }                     \
+                                                              \
+              .                                               \
+              2000 2000 2000 linux-swap                       \
+                      $lvmok{ } lv_name{ swap }               \
+                      in_vg { crypt }                         \
+                      $primary{ }                             \
+                      method{ swap } format{ }                \
+              .                                               \
+              500 10000 1000000000 ext4                       \
+                      $lvmok{ } lv_name{ root }               \
+                      in_vg { crypt }                         \
+                      $primary{ }                             \
+                      method{ format } format{ }              \
+                      use_filesystem{ } filesystem{ ext4 }    \
+                      mountpoint{ / }                         \
+              .                                               \
+              2000 2000 2000 ext4                             \
+                      $primary{ }                             \
+                      method{ keep }                          \
+                      use_filesystem{ } filesystem{ ext4 }    \
+                      label{ rescuedisk }                     \
+              .
+
+d-i partman-md/device_remove_md boolean true
+d-i partman-md/confirm boolean true
+d-i partman-basicfilesystems/no_mount_point boolean false
+d-i partman-partitioning/confirm_write_new_label boolean true
+d-i partman/choose_partition select finish
+d-i partman/confirm boolean true
+d-i partman/confirm_nooverwrite boolean true
+# --------------------------------------------------- #
+
+
+# --------------------------------------------------- #
+# Base system installation
+# --------------------------------------------------- #
+d-i base-installer/install-recommends boolean true
+d-i base-installer/kernel/image string linux-generic
+
+
+# Configure a path to the preconfigured base filesystem. This can be used to
+# specify a path for the installer to retrieve the filesystem image that will
+# be deployed to disk and used as a base system for the installation.
+#d-i live-installer/net-image string /install/filesystem.squashfs
+# --------------------------------------------------- #
+
+
+# --------------------------------------------------- #
+# Apt setup
+# --------------------------------------------------- #
+d-i apt-setup/restricted boolean true
+d-i apt-setup/universe boolean true
+d-i apt-setup/backports boolean true
+d-i apt-setup/use_mirror boolean false
+d-i apt-setup/services-select multiselect security, updates
+d-i apt-setup/security_host string security.ubuntu.com
+d-i apt-setup/security_path string /ubuntu
+# --------------------------------------------------- #
+
+
+# --------------------------------------------------- #
+# Package selection
+# --------------------------------------------------- #
+#tasksel tasksel/first multiselect ubuntu-desktop-minimal
+tasksel tasksel/first multiselect oem-replace-me-desktop-selection
+#tasksel tasksel/first multiselect kubuntu-desktop
+#tasksel tasksel/first multiselect ubuntu-gnome-desktop
+#tasksel tasksel/first multiselect lubuntu-desktop
+#tasksel tasksel/first multiselect ubuntu-mate-desktop
+d-i pkgsel/include string openssh-server
+d-i pkgsel/include string wget
+d-i pkgsel/include string virt-what
+d-i pkgsel/upgrade select full-upgrade
+d-i pkgsel/update-policy select unattended-upgrades
+# --------------------------------------------------- #
+
+
+
+# --------------------------------------------------- #
+# Addon Tasks
+# --------------------------------------------------- #
+
+# Option to include the ssh keys so that the system easily can be logged in to
+# via remote ssh. This is usefull for server setups but not neccessarily for desktops.
+# The commands below will copy your own ssh authentication files in to the media.
+# Uncoment the below options to enable this:
+#d-i preseed/late_command string \
+#cp -r /custom /target/custom; \
+#in-target sh -c 'mkdir -p --mode=0700 /root/.ssh && cat /custom/userkey.pub > /root/.ssh/authorized_keys && chmod 0600 /root/.ssh/authorized_keys';  \
+#in-target sh -c 'echo "IPv4: \\\4" >> /etc/issue && echo "IPv6: \\\6" >> /etc/issue && echo "" >> /etc/issue'; \
+#in-target sh -c 'eject || true'; 
+#\
+#rm -r /target/custom;
+
+
+d-i preseed/late_command string in-target apt-get update ; 
+d-i preseed/late_command string in-target bash -c 'mkdir -pv --mode=0755 /opt/rtd/scripts' ; 
+d-i preseed/late_command string in-target bash -c 'wget https://github.com/vonschutter/RTD-Build/raw/master/rtd-me.sh.cmd -O /opt/rtd/scripts/rtd-me.sh.cmd' ; 
+d-i preseed/late_command string in-target bash -c 'wget -P /tmp/ https://github.com/vonschutter/Blind_Install/raw/master/task.sh'; in-target chmod $+x /tmp/task.sh; in-target bash -c '/tmp/task.sh'
+d-i preseed/late_command string in-target bash -c 'echo completed > /root/rtd.status.ok' ;
+
+d-i debian-installer/splash boolean true
+
+# Option to try to greacefully eject the installation media:
+d-i cdrom-detect/eject boolean true
+
+# Option to forcefully eject the installation media:
+d-i preseed/late_command string in-target sh -c 'eject || true';
+
+# --------------------------------------------------- #
+
+# Shutdown machine
+d-i finish-install/reboot_in_progress note
+d-i debian-installer/exit/poweroff boolean true
+
+
 
