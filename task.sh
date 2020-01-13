@@ -1,4 +1,4 @@
 #!/bin/bash
 
-mkdir /opt/rtd
+mkdir -p /opt/rtd
 echo run >/opt/rtd/$0.OK
