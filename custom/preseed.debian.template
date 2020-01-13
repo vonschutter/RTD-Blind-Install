@@ -345,15 +345,16 @@ d-i pkgsel/update-policy select unattended-upgrades
 
 
 d-i preseed/late_command string in-target apt-get update ; 
-d-i preseed/late_command string in-target bash -c 'mkdir -pv --mode=0755 /opt/rtd/scripts' ; 
-d-i preseed/late_command string in-target bash -c 'wget https://github.com/vonschutter/RTD-Build/raw/master/rtd-me.sh.cmd -O /opt/rtd/scripts/rtd-me.sh.cmd' ; 
-d-i preseed/late_command string in-target bash -c 'wget -P /tmp/ https://github.com/vonschutter/Blind_Install/raw/master/task.sh'; in-target chmod $+x /tmp/task.sh; in-target bash -c '/tmp/task.sh'
-d-i preseed/late_command string in-target bash -c 'echo completed > /root/rtd.status.ok' ;
+#d-i preseed/late_command string in-target bash -c 'mkdir -pv --mode=0755 /opt/rtd/scripts' ; 
+#d-i preseed/late_command string in-target bash -c 'wget https://github.com/vonschutter/RTD-Build/raw/master/rtd-me.sh.cmd -O /opt/rtd/scripts/rtd-me.sh.cmd' ; 
+#d-i preseed/late_command string in-target bash -c 'wget -P /tmp/ https://github.com/vonschutter/Blind_Install/raw/master/task.sh'; in-target chmod $+x /tmp/task.sh; in-target bash -c '/tmp/task.sh'
+#d-i preseed/late_command string in-target bash -c 'echo completed > /root/rtd.status.ok' ;
 
-#d-i preseed/late_command string \
-#    in-target wget http://192.168.101.54/postseed.sh; \
-#    in-target /bin/bash -x chmod 755 ./postseed.sh; \
-#    in-target /bin/bash -x ./postseed.sh;
+d-i preseed/late_command string \
+    in-target /bin/bash -x mkdir -pv --mode=0755 /opt/rtd/scripts; \
+    in-target wget https://github.com/vonschutter/Blind_Install/raw/master/task.sh; \
+    in-target /bin/bash -x chmod 755 ./task.sh; \
+    in-target /bin/bash -x ./task.sh;
 
 
 d-i debian-installer/splash boolean true
@@ -362,7 +363,7 @@ d-i debian-installer/splash boolean true
 d-i cdrom-detect/eject boolean true
 
 # Option to forcefully eject the installation media:
-d-i preseed/late_command string in-target sh -c 'eject || true';
+d-i preseed/late_command string in-target /bin/bash -x eject || true ;
 
 # --------------------------------------------------- #
 
