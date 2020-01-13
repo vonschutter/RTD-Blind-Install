@@ -163,7 +163,11 @@ d-i clock-setup/ntp-server string ntp.ubuntu.com
 #debconf-set partman-auto/disk $BOOTDEV;\
 #debconf-set grub-installer/bootdev $BOOTDEV; 
 d-i partman/early_command string [ "$(ls -A /tmp)" ] && umount -l /media || echo "Empty" ;
-
+d-i partman/early_command string \
+   USBDEV=\$(mount | grep hd-media | cut -d" " -f1 | sed "s/\(.*\)./\1/");\
+   BOOTDEV=\$(list-devices disk | grep -v \$USBDEV | head -1);\
+   debconf-set partman-auto/disk \$BOOTDEV;\
+   debconf-set grub-installer/bootdev \$BOOTDEV;
 # d-i partman/early_command umount /media;
 # --------------------------------------------------- #
 
