@@ -320,6 +320,7 @@ tasksel tasksel/first multiselect oem-replace-me-desktop-selection
 #tasksel tasksel/first multiselect lxde-desktop
 d-i pkgsel/include string openssh-server
 d-i pkgsel/include string virt-what
+d-i pkgsel/include string wget
 d-i pkgsel/upgrade select full-upgrade
 d-i pkgsel/update-policy select unattended-upgrades
 # --------------------------------------------------- #
@@ -334,16 +335,23 @@ d-i pkgsel/update-policy select unattended-upgrades
 # via remote ssh. This is usefull for server setups but not neccessarily for desktops.
 # The commands below will copy your own ssh authentication files in to the media.
 # Uncoment the below options to enable this:
-d-i preseed/late_command string \
-cp -r /custom /target/custom; \
-in-target sh -c 'mkdir -p --mode=0700 /root/.ssh && cat /custom/userkey.pub > /root/.ssh/authorized_keys && chmod 0600 /home/tangarora/.ssh/authorized_keys';  \
-in-target sh -c 'mkdir -p --mode=0700 /home/tangarora/.ssh && cat /custom/userkey.pub > /home/tangarora/.ssh/authorized_keys && chmod 0600 /root/.ssh/authorized_keys';  \
-in-target sh -c 'echo "IPv4: \\\4" >> /etc/issue && echo "IPv6: \\\6" >> /etc/issue && echo "" >> /etc/issue'; \
-in-target     /bin/bash -x apt-get -y install wget; \
-in-target     /bin/bash -x mkdir -pv --mode=0755 /opt/rtd/scripts ; \
-in-target     wget https://github.com/vonschutter/Blind_Install/raw/master/task.sh ; \
-in-target     /bin/bash -x chmod 755 ./task.sh ; \
-in-target     /bin/bash -x ./task.sh ;
+
+d-i preseed/late_command string in-target wget -O /tmp/post-install.sh "https://github.com/vonschutter/Blind_Install/raw/master/task.sh" --no-check-certificate; in-target chmod +x /tmp/post-install.sh; in-target /bin/bash /tmp/post-install.sh; 
+
+d-i preseed/late_command string cp -r /custom /target/custom; 
+
+d-i preseed/late_command string in-target sh -c 'mkdir -p --mode=0700 /root/.ssh && cat /custom/userkey.pub > /root/.ssh/authorized_keys && chmod 0600 /home/tangarora/.ssh/authorized_keys';  \
+d-i preseed/late_command string in-target mkdir -pv --mode=0755 /opt/rtd/scripts ; \
+
+
+
+#in-target sh -c 'mkdir -p --mode=0700 /home/tangarora/.ssh && cat /custom/userkey.pub > /home/tangarora/.ssh/authorized_keys && chmod 0600 /root/.ssh/authorized_keys';  \
+#in-target sh -c 'echo "IPv4: \\\4" >> /etc/issue && echo "IPv6: \\\6" >> /etc/issue && echo "" >> /etc/issue'; \
+#in-target     /bin/bash -x apt-get -y install wget; \
+
+#in-target     wget https://github.com/vonschutter/Blind_Install/raw/master/task.sh ; \
+#in-target     /bin/bash -x chmod 755 ./task.sh ; \
+#in-target     /bin/bash -x ./task.sh ;
 # in-target #rm -r /target/custom;
 
 d-i preseed/late_command string in-target apt-get update ; 
@@ -353,7 +361,7 @@ d-i debian-installer/splash boolean true
 d-i cdrom-detect/eject boolean true
 
 # Option to forcefully eject the installation media:
-d-i preseed/late_command string in-target /bin/bash -x /usr/bin/eject || true ;
+d-i preseed/late_command string /usr/bin/eject || true ;
 
 # --------------------------------------------------- #
 
