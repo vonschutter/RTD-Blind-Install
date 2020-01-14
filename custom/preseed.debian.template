@@ -3,10 +3,10 @@
 # --------------------------------------------------- #
 #
 # This is a preseed template for use with automatically deploying Debian to a wide
-# variety of endpoints. These instructions are tested to work with virtual machines
+# variety of endpoints. These instructions are tested to work with virtual machines;
 # VirtualBox and KVM, as well as a wide range of physical hardware. It has not been tested with 
-# hardware that requires special raid or infiniband drivers to beloaded. If the install target can 
-# be seen by the OEM bootable media this instruction set will most likely work with no issue. 
+# hardware that requires special raid or infiniband drivers to be loaded. If the install target  
+# can be seen by the OEM bootable media this instruction set will most likely work with no issue. 
 #
 # All sections are documented as well as possible given time constraints. It should be trivial to 
 # read and understand what each seciton does and modify it accordingly. The intention is 
@@ -31,15 +31,18 @@
 # in the "Addon Tasks" section at the end.
 #
 # Usage:
-# We recommend to use the build-iso.sh script to build an image with embedded
-# preseed and other required files. In that case the preseed file gets loaded
-# automatically and all additional files are available to the installer.
+# We recommend to use the RTD (RTD Simple System Support Tool) script to build 
+# an image with embedded preseed and other required files. In that case the preseed 
+# file gets loaded automatically and all additional files are available to the installer.
 #
 
 
 # --------------------------------------------------- #
 # Unattended Installation
 # --------------------------------------------------- #
+# Simple instruction to tell the debian installer that
+# this is intended to be an unattended install and to only
+# ask critical questions (wich we will answer in this file)
 d-i auto-install/enable boolean true
 d-i debconf/priority select critical 
 # --------------------------------------------------- #
@@ -65,6 +68,9 @@ d-i debconf/priority select critical
 # --------------------------------------------------- #
 # Localization
 # --------------------------------------------------- #
+# Provide localizaton preferences so that the prefferred
+# language is used for display and formats. Comparable to 
+# the MUI in Microsoft environments.
 d-i debian-installer/locale string en_US.UTF-8
 d-i localechooser/supported-locales multiselect en_US.UTF-8, se_SE.UTF-8
 d-i console-setup/ask_detect boolean false
@@ -75,11 +81,12 @@ d-i console-setup/ask_detect boolean false
 # --------------------------------------------------- #
 # Set Keyboard layout
 # --------------------------------------------------- #
+# Set the prefferred keyboard layout. Keyboards will work
+# regardless, but the letters and symbols may not actually
+# be the ones drawn on the keys. Default is us.
 d-i keyboard-configuration/xkb-keymap select se
 d-i debian-installer/keymap select se
 d-i keymap select se
-#d-i console-setup/ask_detect boolean false
-#d-i console-setup/layoutcode string en
 #d-i keyboard-configuration/xkb-keymap select us
 #d-i keyboard-configuration/layoutcode string us
 # --------------------------------------------------- #
@@ -89,6 +96,7 @@ d-i keymap select se
 # --------------------------------------------------- #
 # Network configuration
 # --------------------------------------------------- #
+# Network setup. This can be a static setup or dhcp. 
 d-i netcfg/choose_interface select auto
 d-i netcfg/hostname string device
 d-i netcfg/get_hostname string device
@@ -113,9 +121,9 @@ d-i hw-detect/load_firmware boolean true
 # Mirror settings
 # --------------------------------------------------- #
 # If you select ftp, the mirror/country string does not need to be set.
-# d-i mirror/protocol string ftp
-d-i mirror/country string manual
-d-i mirror/http/hostname string http.us.debian.org
+d-i mirror/protocol string ftp
+# d-i mirror/country string manual
+d-i mirror/http/hostname string ftp2.de.debian.org
 d-i mirror/http/directory string /debian
 d-i mirror/http/proxy string
 d-i mirror/suite string testing
@@ -155,25 +163,16 @@ d-i clock-setup/ntp-server string ntp.ubuntu.com
 #
 # The Debian installer will install on the first disk it finds which can
 # sometimes be the USB stick itself. Work around this by rolling our own auto
-# detect logic which disallows installing on USB devices.
+# detect logic which disallows installing on USB devices. You can only use one
+# d-i partman-early* -- if you have several, the last one will be read.
 #
-# d-i partman/early_command \
-#    string debconf-set partman-auto/disk "$(echo /dev/`ls -l /sys/block/[hs]d* | grep -v "usb" | head -n1 | sed 's/^.*\([hs]d[a-z]\+\).*$/\1/'`)"
-#d-i partman/early_command \
-#    string debconf-set partman-auto/disk "\$(list-devices disk | head -n1)"
-#d-i partman/early_command string debconf-set partman-auto/disk "$(list-devices disk | grep -v `list-devices usb-partition`)"
-#d-i partman/early_command string \
-#USBDEV=$(list-devices usb-partition | sed "s/\(.*\)./\1/");\
-#BOOTDEV=$(list-devices disk | grep -v "$USBDEV" | head -1);\
-#debconf-set partman-auto/disk $BOOTDEV;\
-#debconf-set grub-installer/bootdev $BOOTDEV; 
-d-i partman/early_command string [ "$(ls -A /tmp)" ] && umount -l /media || echo "Empty" ;
+# d-i partman/early_command string [ "$(ls -A /tmp)" ] && umount -l /media || echo "Empty" ;
 d-i partman/early_command string \
    USBDEV=$(mount | grep hd-media | cut -d" " -f1 | sed "s/\(.*\)./\1/");\
    BOOTDEV=$(list-devices disk | grep -v \$USBDEV | head -1);\
    debconf-set partman-auto/disk $BOOTDEV;\
    debconf-set grub-installer/bootdev $BOOTDEV;
-# d-i partman/early_command umount /media;
+
 # --------------------------------------------------- #
 
 
@@ -236,12 +235,13 @@ d-i partman-lvm/confirm boolean true
 d-i partman-lvm/confirm_nooverwrite boolean true
 d-i partman-auto-lvm/guided_size string max
 d-i partman-auto-lvm/new_vg_name string crypt
-# Use vda & sda to ensure recipie is applied even if this installis run in a KVM VM.
+# Use vda & sda explicitly or leave out to ensure recipie is applied 
+# even if this install is run in a KVM VM (set if there are problems only):
 # d-i partman-auto/disk string /dev/sdb 
 d-i partman-auto/choose_recipe select root-encrypted
 d-i partman-auto/expert_recipe string                         \
       root-encrypted ::                                       \
-                    538 538 1075 free                         \
+              538 538 1075 free                               \
                     $primary                                  \
                     $iflabel{ gpt }                           \
                     $reusemethod{ }                           \
@@ -303,6 +303,8 @@ d-i base-installer/kernel/image string linux-generic
 # Apt setup
 # --------------------------------------------------- #
 # You can choose to install non-free and contrib software.
+# Optionally, enable i386 architecture or others, as well as setup 
+# where to pull security updates from.
 d-i apt-setup/non-free boolean true
 d-i apt-setup/contrib boolean true
 d-i apt-setup/services-select multiselect security, updates
@@ -314,6 +316,9 @@ d-i apt-setup/multiarch string i386
 # --------------------------------------------------- #
 # Package selection
 # --------------------------------------------------- #
+# Packages may be selected as groups (meta packages) like kde-desktop or
+# as individual packages. Only one "pkgsel/include" string will be used though! 
+# remembder to fit all the packages you want on one line. 
 #tasksel tasksel/first multiselect standard
 tasksel tasksel/first multiselect oem-replace-me-desktop-selection
 #tasksel tasksel/first multiselect desktop
