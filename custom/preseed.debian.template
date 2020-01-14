@@ -120,8 +120,6 @@ d-i hw-detect/load_firmware boolean true
 # --------------------------------------------------- #
 # Mirror settings
 # --------------------------------------------------- #
-# If you select ftp, the mirror/country string does not need to be set.
-d-i mirror/protocol string ftp
 d-i mirror/country string manual
 d-i mirror/http/hostname string ftp2.de.debian.org
 d-i mirror/http/directory string /debian
