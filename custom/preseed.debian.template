@@ -138,8 +138,12 @@ d-i mirror/udeb/suite string testing
 # --------------------------------------------------- #
 # Account setup (temporary user account)
 # --------------------------------------------------- #
+# Setup an initial user and disable root login by default. 
+# root login may be re-enabled later by setting a root password.
+# An encrypted password is set here, and should be changed
+# ASAP after the system is built.
 d-i passwd/root-login boolean false
-d-i passwd/user-fullname string Ubuntu User
+d-i passwd/user-fullname string RTD User
 d-i passwd/username string tangarora
 d-i passwd/user-password-crypted password $6$Rn5/UTzjIs68MX$9gz8vmshGlPqse3VoX8dzSfhWxRVoYv1MB6aGRD8xdvztOf.gD.SxxVWkxYrwwbShB9Q14flquK/apbdQJ65t1
 # --------------------------------------------------- #
@@ -158,7 +162,7 @@ d-i clock-setup/ntp-server string ntp.ubuntu.com
 
 
 # --------------------------------------------------- #
-# Do NOT install on the USB stick(!)
+# Do NOT install on USB stick if there
 # --------------------------------------------------- #
 #
 # The Debian installer will install on the first disk it finds which can
@@ -193,7 +197,7 @@ d-i partman-efi/non_efi_system boolean true
 
 
 # --------------------------------------------------- #
-# Grub
+# Grub bootloader installation
 # --------------------------------------------------- #
 #
 # Tell the grub-installer to install to the MBR even if it also finds some other
@@ -347,12 +351,14 @@ d-i pkgsel/update-policy select unattended-upgrades
 # The commands below will copy your own ssh authentication files in to the media.
 # Uncoment the below options to enable this:
 
-d-i preseed/late_command string mkdir -p --mode=0755 /target/opt/rtd/scripts ; \
-	cp -r /custom /target/custom  ; \
-	in-target wget -O /opt/post-install.sh "https://github.com/vonschutter/Blind_Install/raw/master/task.sh" --no-check-certificate ; \
-	in-target /bin/bash /tmp/post-install.sh  ; \
-	in-target sh -c 'mkdir -p --mode=0700 /root/.ssh && cat /custom/userkey.pub > /root/.ssh/authorized_keys '  ; \
-	in-target echo RTD done > /opt/rtd/preseed.OK
+d-i preseed/late_command string mkdir -p /target/opt/rtd/scripts ; \
+	echo done
+	#cp -r /custom /target/custom ; \
+	#cp /preseed.cfg /target/ ; \
+	#in-target wget -O /opt/post-install.sh "https://github.com/vonschutter/Blind_Install/raw/master/task.sh" --no-check-certificate ; \
+	#in-target /bin/bash /tmp/post-install.sh  ; \
+	#in-target sh -c 'mkdir -p --mode=0700 /root/.ssh && cat /custom/userkey.pub > /root/.ssh/authorized_keys '  ; \
+	#in-target echo RTD done > /opt/rtd/preseed.OK
 
 # Answer the last question 
 d-i debian-installer/splash boolean true
