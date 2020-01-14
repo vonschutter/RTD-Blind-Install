@@ -127,7 +127,7 @@ d-i mirror/http/proxy string
 d-i mirror/suite string testing
 
 # Suite to use for loading installer components (optional).
-d-i mirror/udeb/suite string testing
+# d-i mirror/udeb/suite string testing
  
 # --------------------------------------------------- #
 
@@ -330,7 +330,7 @@ tasksel tasksel/first multiselect oem-replace-me-desktop-selection
 #tasksel tasksel/first multiselect mate-desktop
 #tasksel tasksel/first multiselect lxde-desktop
 d-i pkgsel/include string openssh-server virt-what wget spice-vdagent
-d-i pkgsel/upgrade select full-upgrade
+d-i pkgsel/upgrade select safe-upgrade
 d-i pkgsel/update-policy select unattended-upgrades
 # --------------------------------------------------- #
 
