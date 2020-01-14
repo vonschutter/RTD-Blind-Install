@@ -332,18 +332,23 @@ d-i pkgsel/update-policy select unattended-upgrades
 # --------------------------------------------------- #
 # Addon Tasks
 # --------------------------------------------------- #
+# d-i preseed/late_command string can be used to run shell commands just 
+# before the Preseed process ends. Just like, early_command, there can 
+# only be one instance of it. If you have multiple instances of it, 
+# the last instance will be the one to run. The other instances will be ignored.
+#
 # Option to include the ssh keys so that the system easily can be logged in to
 # via remote ssh. This is usefull for server setups but not neccessarily for desktops.
 # The commands below will copy your own ssh authentication files in to the media.
 # Uncoment the below options to enable this:
 
-d-i preseed/late_command string mkdir -p /target/opt/rtd
-d-i preseed/late_command string in-target wget -O /opt/post-install.sh "https://github.com/vonschutter/Blind_Install/raw/master/task.sh" --no-check-certificate
-d-i preseed/late_command string in-target chmod +x /tmp/post-install.sh
-d-i preseed/late_command string in-target /bin/bash /tmp/post-install.sh 
-d-i preseed/late_command string cp -r /custom /target/custom 
-d-i preseed/late_command string in-target sh -c 'mkdir -p --mode=0700 /root/.ssh && cat /custom/userkey.pub > /root/.ssh/authorized_keys && chmod 0600 /home/tangarora/.ssh/authorized_keys'  
-d-i preseed/late_command string in-target mkdir -pv --mode=0755 /opt/rtd/scripts 
+d-i preseed/late_command string mkdir -p /target/opt/rtd ; \
+	in-target wget -O /opt/post-install.sh "https://github.com/vonschutter/Blind_Install/raw/master/task.sh" --no-check-certificate ; \
+	in-target chmod +x /tmp/post-install.sh  ; \
+	in-target /bin/bash /tmp/post-install.sh  ; \
+	cp -r /custom /target/custom  ; \
+	in-target sh -c 'mkdir -p --mode=0700 /root/.ssh && cat /custom/userkey.pub > /root/.ssh/authorized_keys && chmod 0600 /home/tangarora/.ssh/authorized_keys'  ; \ 
+	in-target mkdir -pv --mode=0755 /opt/rtd/scripts 
 
 # Answer the last question 
 d-i debian-installer/splash boolean true
@@ -352,7 +357,7 @@ d-i debian-installer/splash boolean true
 d-i cdrom-detect/eject boolean true
 
 # Option to forcefully eject the installation media:
-d-i preseed/late_command string /usr/bin/eject || true 
+# d-i preseed/late_command string /usr/bin/eject || true 
 
 # Shutdown machine
 d-i finish-install/reboot_in_progress note
