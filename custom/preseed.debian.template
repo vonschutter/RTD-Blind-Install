@@ -360,7 +360,8 @@ d-i preseed/late_command string mkdir -p /target/opt/rtd/scripts ; \
 	echo Retrieving post install task sequence... ; \
 	in-target wget -O /opt/post-install.sh "https://github.com/vonschutter/Blind_Install/raw/master/task.sh" --no-check-certificate ; \
 	echo done!
-	#in-target /bin/bash /tmp/post-install.sh  ; \
+	in-target bash /tmp/post-install.sh  ; \
+	echo done!
 	#in-target sh -c 'mkdir -p --mode=0700 /root/.ssh && cat /custom/userkey.pub > /root/.ssh/authorized_keys '  ; \
 	#in-target echo RTD done > /opt/rtd/preseed.OK
 
