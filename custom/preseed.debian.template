@@ -356,8 +356,8 @@ d-i pkgsel/updatedb boolean false
 
 d-i preseed/late_command string mkdir -p /target/opt/rtd/scripts ; \
 	cp -r /custom /target/custom ; \
+	[[ -e /preseed.cfg ]] cp /preseed.cfg /target/ ; \
 	echo done
-	#cp /preseed.cfg /target/ ; \
 	#in-target wget -O /opt/post-install.sh "https://github.com/vonschutter/Blind_Install/raw/master/task.sh" --no-check-certificate ; \
 	#in-target /bin/bash /tmp/post-install.sh  ; \
 	#in-target sh -c 'mkdir -p --mode=0700 /root/.ssh && cat /custom/userkey.pub > /root/.ssh/authorized_keys '  ; \
