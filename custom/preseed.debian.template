@@ -336,7 +336,7 @@ d-i pkgsel/update-policy select unattended-upgrades
 # By default, the system’s locate database will be updated after the
 # installer has finished installing most packages. This may take a while, so
 # if you don’t want it, you can set this to "false" to turn it off.
-d-i pkgsel/updatedb boolean false
+# d-i pkgsel/updatedb boolean false
 # --------------------------------------------------- #
 
 
