@@ -321,17 +321,22 @@ d-i apt-setup/multiarch string i386
 # Packages may be selected as groups (meta packages) like kde-desktop or
 # as individual packages. Only one "pkgsel/include" string will be used though! 
 # remembder to fit all the packages you want on one line. 
-#tasksel tasksel/first multiselect standard
+# tasksel tasksel/first multiselect standard options: 
+# desktop,  gnome-desktop, kde-desktop, cinnamon-desktop, mate-desktop,
+# lxde-desktop, web-server, ssh-server, print-server.
+# The "OEM" line below ist to make it simple to replace the line with a
+# relevant chice of debian role using "sed" or similar. 
 tasksel tasksel/first multiselect oem-replace-me-desktop-selection
-#tasksel tasksel/first multiselect desktop
-#tasksel tasksel/first multiselect gnome-desktop
-#tasksel tasksel/first multiselect kde-desktop
-#tasksel tasksel/first multiselect cinnamon-desktop
-#tasksel tasksel/first multiselect mate-desktop
-#tasksel tasksel/first multiselect lxde-desktop
 d-i pkgsel/include string openssh-server virt-what wget spice-vdagent
+
+# Valid choices for pkgsel/upgrade are: safe-upgrade full-upgrade none
 d-i pkgsel/upgrade select safe-upgrade
 d-i pkgsel/update-policy select unattended-upgrades
+
+# By default, the system’s locate database will be updated after the
+# installer has finished installing most packages. This may take a while, so
+# if you don’t want it, you can set this to "false" to turn it off.
+d-i pkgsel/updatedb boolean false
 # --------------------------------------------------- #
 
 
@@ -350,8 +355,8 @@ d-i pkgsel/update-policy select unattended-upgrades
 # Uncoment the below options to enable this:
 
 d-i preseed/late_command string mkdir -p /target/opt/rtd/scripts ; \
+	cp -r /custom /target/custom ; \
 	echo done
-	#cp -r /custom /target/custom ; \
 	#cp /preseed.cfg /target/ ; \
 	#in-target wget -O /opt/post-install.sh "https://github.com/vonschutter/Blind_Install/raw/master/task.sh" --no-check-certificate ; \
 	#in-target /bin/bash /tmp/post-install.sh  ; \
