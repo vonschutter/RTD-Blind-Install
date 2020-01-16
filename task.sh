@@ -61,9 +61,9 @@ _RTDLOGSD=/opt/rtd/log
 _RTDSRC=https://github.com/vonschutter/RTD-Build/archive/master.zip
 
 # Determine log file directory
-export _ERRLOGFILE=$_RTDLOGSD/$0-error.log
-export _LOGFILE=$_RTDLOGSD/$0.log 
-export _STATUSLOG=$_RTDLOGSD/$0-status.log
+_ERRLOGFILE=$_RTDLOGSD/post-install-error.log
+_LOGFILE=$_RTDLOGSD/post-install.log 
+_STATUSLOG=$_RTDLOGSD/post-install-status.log
 
 #::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 #::::::::::::::                                          ::::::::::::::::::::::
