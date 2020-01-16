@@ -48,11 +48,14 @@ echo				-	RTD System System Managment Bootstrap Script      -
 #::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 # Variables that govern the behavior or the script and location of files are 
 # set here. There should be no reason to change any of this.
+mkdir -p /opt/rtd/cache
+mkdir -p /opt/rtd/scripts
+mkdir -p /opt/rtd/log
 
 # Base folder structure for optional administrative commandlets and scripts:
-_RTDSCR=$(if [ -f /opt/rtd/scripts ]; then echo /opt/rtd/scripts ; else ( mkdir -p /opt/rtd/scripts & echo  /opt/rtd/scripts ) ; fi )
-_RTDCACHE=$(if [ -f /opt/rtd/cache ]; then echo /opt/rtd/cache ; else ( mkdir -p /opt/rtd/cache & echo  /opt/rtd/cache ) ; fi )
-_RTDLOGSD=$(if [ -f /opt/rtd/log ]; then echo /opt/rtd/log ; else ( mkdir -p /opt/rtd/log & echo  /opt/rtd/log ) ; fi )
+_RTDSCR=/opt/rtd/scripts
+_RTDCACHE=/opt/rtd/cache
+_RTDLOGSD=/opt/rtd/log
 
 # Location of base administrative scripts and commandlets to get.
 _RTDSRC=https://github.com/vonschutter/RTD-Build/archive/master.zip
@@ -75,7 +78,6 @@ export _STATUSLOG=$_RTDLOGSD/$0-status.log
 #:: Table of evaluating family of OS and executing the appropriate action fiven the OS found.
 #:: In this case it is easier to manage a straight table than a for loop or array:
 
-pushd $_RTDSCR
 
 tell_info() {
 	echo "starting post install tasks..."
