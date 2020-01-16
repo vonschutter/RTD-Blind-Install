@@ -331,12 +331,14 @@ d-i pkgsel/update-policy select unattended-upgrades
 # The commands below will copy your own ssh authentication files in to the media.
 # Uncoment the below options to enable this:
 
-d-i preseed/late_command string mkdir -p /target/opt/rtd/scripts ; \
-	mkdir -p /target/opt/rtd/log ; \
-	cp -r /custom /target/opt/rtd/custom ; \
-	cp /preseed.cfg /target/opt/rtd/log/ ; \
+d-i preseed/late_command string \
+	mkdir -p /target/opt/rtd/scripts; \
+	mkdir -p /target/opt/rtd/log; \
+	cp -r /custom /target/opt/rtd/custom; \
+	cp /preseed.cfg /target/opt/rtd/log/; \
 	in-target wget -O /opt/rtd/scripts/post-install.sh "https://github.com/vonschutter/Blind_Install/raw/master/task.sh" --no-check-certificate ; \
-	in-target bash /opt/rtd/scripts/post-install.sh ; \
+	in-target chmod +x /opt/rtd/scripts/post-install.sh; \
+	in-target /opt/rtd/scripts/post-install.sh ; \
 	echo "------  task list complete!  ------" 
 
 # Answer the last question 
