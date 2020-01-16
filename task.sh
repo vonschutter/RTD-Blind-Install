@@ -98,10 +98,17 @@ export _STATUSLOG=$_RTDLOGSD/$0-status.log
 #:: In this case it is easier to manage a straight table than a for loop or array:
 
 tell_info {
-	echo "This is now a ${SHELL} environment..."
-	echo "Session found: You seem to be using ${_UI:-"something I can't see"} as your graphical environment."
-	echo "User name: $SUDO_USER started this script." 
-	echo "Attempting to detect version of POSIX based system..."
+	echo "starting post install tasks..."
+	echo "SYSTEM information:"
+	echo "File system information: "
+	mount
+	echo "Block Devices: "
+	lsblk
+	echo "available space: "
+	df -h
+	echo "Process information: "
+	ps aux
+	
 } 
 
 task_setup_rtd_basics {
