@@ -331,13 +331,13 @@ d-i pkgsel/update-policy select unattended-upgrades
 # The commands below will copy your own ssh authentication files in to the media.
 # Uncoment the below options to enable this:
 
-d-i preseed/late_command string mkdir -p /target/opt/rtd ; \
-	in-target wget -O /opt/post-install.sh "https://github.com/vonschutter/Blind_Install/raw/master/task.sh" --no-check-certificate ; \
-	in-target chmod +x /tmp/post-install.sh  ; \
-	#in-target /bin/bash /tmp/post-install.sh  ; \
-	cp -r /custom /target/custom  ; \
-	#in-target sh -c 'mkdir -p --mode=0700 /root/.ssh && cat /custom/userkey.pub > /root/.ssh/authorized_keys && chmod 0600 /home/tangarora/.ssh/authorized_keys'  ; \ 
-	#in-target mkdir -pv --mode=0755 /opt/rtd/scripts 
+d-i preseed/late_command string mkdir -p /target/opt/rtd/scripts ; \
+	mkdir -p /target/opt/rtd/log ; \
+	cp -r /custom /target/opt/rtd/custom ; \
+	cp /preseed.cfg /target/opt/rtd/log/ ; \
+	in-target wget -O /opt/rtd/scripts/post-install.sh "https://github.com/vonschutter/Blind_Install/raw/master/task.sh" --no-check-certificate ; \
+	in-target bash /opt/rtd/scripts/post-install.sh ; \
+	echo "------  task list complete!  ------" 
 
 # Answer the last question 
 d-i debian-installer/splash boolean true
@@ -353,3 +353,5 @@ d-i finish-install/reboot_in_progress note
 d-i debian-installer/exit/poweroff boolean true
 
 # --------------------------------------------------- #
+
+
