@@ -49,7 +49,6 @@ echo				-	RTD System System Managment Bootstrap Script      -
 # Variables that govern the behavior or the script and location of files are 
 # set here. There should be no reason to change any of this.
 
-
 # Base folder structure for optional administrative commandlets and scripts:
 _RTDSCR=$(if [ -f /opt/rtd/scripts ]; then echo /opt/rtd/scripts ; else ( mkdir -p /opt/rtd/scripts & echo  /opt/rtd/scripts ) ; fi )
 _RTDCACHE=$(if [ -f /opt/rtd/cache ]; then echo /opt/rtd/cache ; else ( mkdir -p /opt/rtd/cache & echo  /opt/rtd/cache ) ; fi )
@@ -95,23 +94,13 @@ tell_info() {
 task_setup_rtd_basics() {
 	echo "Linux OS Found: Attempting to get instructions for Linux..."
 	# Using a dirty way to forcibly ensure that wget and unzip are available on the system. 
-	for i in apt yum dnf zypper ; do $i -y install wget &>> $_LOGFILE ; done
-	wget -q  $_RTDSRC -P $_RTDCACHE &>> $_LOGFILE
-	for i in apt yum dnf zypper ; do $i -y install unzip &>> $_LOGFILE ; done
-	unzip -o -j $_RTDCACHE/master.zip -d $_RTDSCR  -x *.png *.md *.yml *.cmd &>> $_LOGFILE && rm -v $_RTDCACHE/master.zip &>> $_LOGFILE
-		if [ $? -eq 0 ]
-		then
-			echo "Instructions sucessfully retrieved..."
-			chmod +x $_RTDSCR/*
-			pushd /bin
-			ln -f -s $_RTDSCR/rtd* .
-			popd
-			 
-		else
-			echo "Failed to retrieve instructions correctly! " 
-			echo "Suggestion: check write permission in "/opt" or internet connectivity."
-			exit 
-		fi
+	wget -q  $_RTDSRC -P $_RTDCACHE
+	unzip -o -j $_RTDCACHE/master.zip -d $_RTDSCR  -x *.png *.md *.yml *.cmd && rm -v $_RTDCACHE/master.zip 
+	echo "Instructions sucessfully retrieved..."
+	chmod +x $_RTDSCR/*
+	pushd /bin
+	ln -f -s $_RTDSCR/rtd* .
+	popd
 }
 
 task_setup_ssh_keys() {
@@ -124,6 +113,3 @@ task_setup_ssh_keys() {
 tell_info &>> $_LOGFILE
 task_setup_rtd_basics &>> $_LOGFILE
 task_setup_ssh_keys &>> $_LOGFILE
-
-
-
