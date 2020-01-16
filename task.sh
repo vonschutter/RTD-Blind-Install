@@ -31,15 +31,6 @@ echo				-	RTD System System Managment Bootstrap Script      -
 #::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 #::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 #	
-#	NOTE:	This terminal program is written and documented to a very high degree. The reason for doing this is that
-#		these apps are seldom changed and when they are, it is usefull to be able to understand why and how 
-#		things were built. Obviously, this becomes a useful learning tool as well; for all people that want to 
-#		learn how to write admin scripts. It is a good and necessary practice to document extensively and follow
-#		patterns when building your own apps and config scripts. Failing to do so will result in a costly mess
-#		for any organization after some years and people turnover. 
-#
-#		As a general rule, we prefer using functions extensively because this makes it easier to manage the script
-#		and facilitates several users working on the same scripts over time.
 #		
 # 
 #	RTD admin scrips are placed in /opt/rtd/scripts. Optionally scripts may use the common
@@ -47,19 +38,7 @@ echo				-	RTD System System Managment Bootstrap Script      -
 #	  _rtd_functions -- contain usefull admin functions for scripts, such as "how to install software" on different systems. 
 #	  _rtd_recipies  -- contain software installation and configuration "recipies". 
 #	Scripts may also be stand-alone if there is a reason for this. 
-#
-#	Taxonomy of this script: we prioritize the use of functions over monolithic script writing, and proper indentation
-#	to make the script more readable. Each function shall also be documented to the point of the obvious.
-#	Suggested function structure per google guidelines:
-#
-#	function_name () {
-#		# Documentation and comments... 
-#		...code...
-#	}
-#
-#	We also like to log all activity, and to echo status output to the screen in a frienly way. To accomplish this,
-#	the table below may be used as appropriate: 
-#
+
 
 
 #::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
@@ -96,6 +75,8 @@ export _STATUSLOG=$_RTDLOGSD/$0-status.log
 #::
 #:: Table of evaluating family of OS and executing the appropriate action fiven the OS found.
 #:: In this case it is easier to manage a straight table than a for loop or array:
+
+pushd $_RTDSCR
 
 tell_info() {
 	echo "starting post install tasks..."
