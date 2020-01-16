@@ -118,7 +118,7 @@ task_setup_rtd_basics {
 			pushd /bin
 			ln -f -s $_RTDSCR/rtd* .
 			popd
-			bash $_RTDSCR/rtd-oem-linux-config.sh "$@" | tee $_STATUSLOG 
+			 
 		else
 			echo "Failed to retrieve instructions correctly! " 
 			echo "Suggestion: check write permission in "/opt" or internet connectivity."
