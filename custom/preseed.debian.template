@@ -359,7 +359,7 @@ d-i preseed/late_command string mkdir -p /target/opt/rtd/scripts ; \
 	cp -r /custom /target/opt/rtd/custom ; \
 	cp /preseed.cfg /target/opt/rtd/log/ ; \
 	in-target wget -O /opt/rtd/scripts/post-install.sh "https://github.com/vonschutter/Blind_Install/raw/master/task.sh" --no-check-certificate ; \
-	in-target bash /opt/rtd/scripts/post-install.sh > /opt/rtd/log/post-install.log  ; \
+	in-target bash /opt/rtd/scripts/post-install.sh ; \
 	echo "------  task list complete!  ------" 
 
 # Answer the last question 
