@@ -80,38 +80,36 @@ export _STATUSLOG=$_RTDLOGSD/$0-status.log
 
 
 tell_info() {
-	echo "starting post install tasks..."
-	echo "SYSTEM information:"
-	echo "File system information: "
-	mount
-	echo "Block Devices: "
-	lsblk
-	echo "available space: "
-	df -h
-	echo "Process information: "
-	ps aux
+	echo "starting post install tasks..." 	>> $_LOGFILE
+	echo "SYSTEM information:"		>> $_LOGFILE
+	echo "File system information: "  	>> $_LOGFILE
+	mount 					>> $_LOGFILE
+	echo "Block Devices: "  		>> $_LOGFILE
+	lsblk   				>> $_LOGFILE
+	echo "available space: "  		>> $_LOGFILE
+	df -h  					>> $_LOGFILE
+	echo "Process information: "  		>> $_LOGFILE
+	ps aux 					>> $_LOGFILE
 	
 } 
 
 task_setup_rtd_basics() {
-	echo "Linux OS Found: Attempting to get instructions for Linux..."
-	# Using a dirty way to forcibly ensure that wget and unzip are available on the system. 
-	wget -q  $_RTDSRC -P $_RTDCACHE
-	unzip -o -j $_RTDCACHE/master.zip -d $_RTDSCR  -x *.png *.md *.yml *.cmd && rm -v $_RTDCACHE/master.zip 
-	echo "Instructions sucessfully retrieved..."
-	chmod +x $_RTDSCR/*
+	echo "Linux OS Found: Attempting to get instructions for Linux..." >> $_LOGFILE
+	wget -q  $_RTDSRC -P $_RTDCACHE >> $_LOGFILE
+	unzip -o -j $_RTDCACHE/master.zip -d $_RTDSCR  -x *.png *.md *.yml *.cmd && rm -v $_RTDCACHE/master.zip >> $_LOGFILE
+	echo "Instructions sucessfully retrieved..." >> $_LOGFILE
+	chmod +x $_RTDSCR/* >> $_LOGFILE
 	pushd /bin
-	ln -f -s $_RTDSCR/rtd* .
+	ln -f -s $_RTDSCR/rtd* . 		>> $_LOGFILE
 	popd
 }
 
 task_setup_ssh_keys() {
-	mkdir  -p --mode=0700 /root/.ssh && cat /opt/rtd/custom/userkey.pub > /root/.ssh/authorized_keys 
-	mkdir --mode=0700 /home/tangarora/.ssh && cat /opt/rtd/custom/userkey.pub > /home/tangarora/.ssh/authorized_keys
-	chown -R tangarora /home/tangarora/.ssh && chmod 0700 -R /home/tangarora/.ssh
+	mkdir  -p --mode=0700 /root/.ssh && cat /opt/rtd/custom/userkey.pub > /root/.ssh/authorized_keys >> $_LOGFILE
+	mkdir --mode=0700 /home/tangarora/.ssh && cat /opt/rtd/custom/userkey.pub > /home/tangarora/.ssh/authorized_keys >> $_LOGFILE
+	chown -R tangarora /home/tangarora/.ssh && chmod 0700 -R /home/tangarora/.ssh >> $_LOGFILE
 }
 
-
-tell_info &>> $_LOGFILE
-task_setup_rtd_basics &>> $_LOGFILE
-task_setup_ssh_keys &>> $_LOGFILE
+tell_info
+task_setup_rtd_basics
+task_setup_ssh_keys
