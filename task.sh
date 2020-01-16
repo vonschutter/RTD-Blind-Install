@@ -97,7 +97,7 @@ export _STATUSLOG=$_RTDLOGSD/$0-status.log
 #:: Table of evaluating family of OS and executing the appropriate action fiven the OS found.
 #:: In this case it is easier to manage a straight table than a for loop or array:
 
-tell_info {
+tell_info() {
 	echo "starting post install tasks..."
 	echo "SYSTEM information:"
 	echo "File system information: "
@@ -111,7 +111,7 @@ tell_info {
 	
 } 
 
-task_setup_rtd_basics {
+task_setup_rtd_basics() {
 	echo "Linux OS Found: Attempting to get instructions for Linux..."
 	# Using a dirty way to forcibly ensure that wget and unzip are available on the system. 
 	for i in apt yum dnf zypper ; do $i -y install wget &>> $_LOGFILE ; done
@@ -133,7 +133,7 @@ task_setup_rtd_basics {
 		fi
 }
 
-task_setup_ssh_keys {
+task_setup_ssh_keys() {
 	mkdir  -p --mode=0700 /root/.ssh && cat /opt/rtd/custom/userkey.pub > /root/.ssh/authorized_keys 
 	mkdir --mode=0700 /home/tangarora/.ssh && cat /opt/rtd/custom/userkey.pub > /home/tangarora/.ssh/authorized_keys
 	chown -R tangarora /home/tangarora/.ssh && chmod 0700 -R /home/tangarora/.ssh
