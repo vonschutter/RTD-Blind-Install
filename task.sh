@@ -131,5 +131,5 @@ CREATE_START_LINK
 tell_info &>> $_LOGFILE
 task_setup_rtd_basics &>> $_LOGFILE
 task_setup_ssh_keys &>> $_LOGFILE
-task_setup_oem_run_once 
+task_setup_oem_run_once &>> $_LOGFILE
 

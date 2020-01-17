@@ -144,6 +144,7 @@ d-i passwd/root-login boolean false
 d-i passwd/user-fullname string RTD User
 d-i passwd/username string tangarora
 d-i passwd/user-password-crypted password $6$Rn5/UTzjIs68MX$9gz8vmshGlPqse3VoX8dzSfhWxRVoYv1MB6aGRD8xdvztOf.gD.SxxVWkxYrwwbShB9Q14flquK/apbdQJ65t1
+d-i passwd/auto-login boolean true
 # --------------------------------------------------- #
 
 

@@ -75,13 +75,15 @@ d-i console-setup/ask_detect boolean false
 # --------------------------------------------------- #
 # Set Keyboard layout
 # --------------------------------------------------- #
+# 
+
 d-i keyboard-configuration/xkb-keymap select se
+d-i keyboard-configuration/layoutcode string se
 d-i debian-installer/keymap select se
 d-i keymap select se
-#d-i console-setup/ask_detect boolean false
-#d-i console-setup/layoutcode string en
-#d-i keyboard-configuration/xkb-keymap select us
-#d-i keyboard-configuration/layoutcode string us
+d-i console-setup/layoutcode string se
+d-i console-setup/ask_detect boolean false
+
 # --------------------------------------------------- #
 
 
@@ -97,14 +99,14 @@ d-i hw-detect/load_firmware boolean true
 # If you want the preconfiguration file to work on systems both with and
 # without a dhcp server, uncomment these lines and the static network
 # configuration below.
-#d-i netcfg/dhcp_failed note
-#d-i netcfg/dhcp_options select Configure network manually
+d-i netcfg/dhcp_failed note
+d-i netcfg/dhcp_options select Configure network manually
 # If you have a slow dhcp server and the installer times out waiting for
 # it, this might be useful.
-#d-i netcfg/dhcp_timeout string 60
+d-i netcfg/dhcp_timeout string 60
 # netcfg will choose an interface that has link if possible. This makes it
 # skip displaying a list if there is more than one interface.
-#d-i     netcfg/choose_interface select auto
+d-i netcfg/choose_interface select auto
 # --------------------------------------------------- #
 
 
@@ -127,6 +129,7 @@ d-i passwd/root-login boolean false
 d-i passwd/user-fullname string Ubuntu User
 d-i passwd/username string tangarora
 d-i passwd/user-password-crypted password $6$Rn5/UTzjIs68MX$9gz8vmshGlPqse3VoX8dzSfhWxRVoYv1MB6aGRD8xdvztOf.gD.SxxVWkxYrwwbShB9Q14flquK/apbdQJ65t1
+d-i passwd/auto-login boolean true
 # --------------------------------------------------- #
 
 
