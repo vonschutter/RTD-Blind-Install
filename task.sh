@@ -47,15 +47,11 @@ echo				-	RTD System System Managment Bootstrap Script      -
 #::::::::::::::                                          ::::::::::::::::::::::
 #::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 # Variables that govern the behavior or the script and location of files are 
-# set here. There should be no reason to change any of this.
-mkdir -p /opt/rtd/cache
-mkdir -p /opt/rtd/scripts
-mkdir -p /opt/rtd/log
 
 # Base folder structure for optional administrative commandlets and scripts:
-_RTDSCR=/opt/rtd/scripts
-_RTDCACHE=/opt/rtd/cache
-_RTDLOGSD=/opt/rtd/log
+_RTDSCR=$(if [ -f /opt/rtd/scripts ]; then echo /opt/rtd/scripts ; else ( mkdir -p /opt/rtd/scripts & echo  /opt/rtd/scripts ) ; fi )
+_RTDCACHE=$(if [ -f /opt/rtd/cache ]; then echo /opt/rtd/cache ; else ( mkdir -p /opt/rtd/cache & echo  /opt/rtd/cache ) ; fi )
+_RTDLOGSD=$(if [ -f /opt/rtd/log ]; then echo /opt/rtd/log ; else ( mkdir -p /opt/rtd/log & echo  /opt/rtd/log ) ; fi )
 
 # Location of base administrative scripts and commandlets to get.
 _RTDSRC=https://github.com/vonschutter/RTD-Build/archive/master.zip
@@ -80,36 +76,36 @@ _STATUSLOG=$_RTDLOGSD/post-install-status.log
 
 
 tell_info() {
-	echo "starting post install tasks..." 	>> $_LOGFILE
-	echo "SYSTEM information:"		>> $_LOGFILE
-	echo "File system information: "  	>> $_LOGFILE
-	mount 					>> $_LOGFILE
-	echo "Block Devices: "  		>> $_LOGFILE
-	lsblk   				>> $_LOGFILE
-	echo "available space: "  		>> $_LOGFILE
-	df -h  					>> $_LOGFILE
-	echo "Process information: "  		>> $_LOGFILE
-	ps aux 					>> $_LOGFILE
+	echo "starting post install tasks..." 
+	echo "SYSTEM information:"		
+	echo "File system information: "  	
+	mount 					
+	echo "Block Devices: "  		
+	lsblk   				
+	echo "available space: "  		
+	df -h  					
+	echo "Process information: "  		
+	ps aux 					
 	
 } 
 
 task_setup_rtd_basics() {
-	echo "Linux OS Found: Attempting to get instructions for Linux..." >> $_LOGFILE
-	wget -q  $_RTDSRC -P $_RTDCACHE >> $_LOGFILE
-	unzip -o -j $_RTDCACHE/master.zip -d $_RTDSCR  -x *.png *.md *.yml *.cmd && rm -v $_RTDCACHE/master.zip >> $_LOGFILE
-	echo "Instructions sucessfully retrieved..." >> $_LOGFILE
-	chmod +x $_RTDSCR/* >> $_LOGFILE
+	echo "Linux OS Found: Attempting to get instructions for Linux..." 
+	wget -q  $_RTDSRC -P $_RTDCACHE 
+	unzip -o -j $_RTDCACHE/master.zip -d $_RTDSCR  -x *.png *.md *.yml *.cmd && rm -v $_RTDCACHE/master.zip >> 
+	echo "Instructions sucessfully retrieved..." 
+	chmod +x $_RTDSCR/* 
 	pushd /bin
-	ln -f -s $_RTDSCR/rtd* . 		>> $_LOGFILE
+	ln -f -s $_RTDSCR/rtd* . 		
 	popd
 }
 
 task_setup_ssh_keys() {
-	mkdir  -p --mode=0700 /root/.ssh && cat /opt/rtd/custom/userkey.pub > /root/.ssh/authorized_keys >> $_LOGFILE
-	mkdir --mode=0700 /home/tangarora/.ssh && cat /opt/rtd/custom/userkey.pub > /home/tangarora/.ssh/authorized_keys >> $_LOGFILE
-	chown -R tangarora /home/tangarora/.ssh && chmod 0700 -R /home/tangarora/.ssh >> $_LOGFILE
+	mkdir  -p --mode=0700 /root/.ssh && cat /opt/rtd/custom/userkey.pub > /root/.ssh/authorized_keys 
+	mkdir --mode=0700 /home/tangarora/.ssh && cat /opt/rtd/custom/userkey.pub > /home/tangarora/.ssh/authorized_keys 
+	chown -R tangarora /home/tangarora/.ssh && chmod 0700 -R /home/tangarora/.ssh 
 }
 
-tell_info
-task_setup_rtd_basics
-task_setup_ssh_keys
+tell_info &>> $_LOGFILE
+task_setup_rtd_basic &>> $_LOGFILEs
+task_setup_ssh_keys &>> $_LOGFILE
