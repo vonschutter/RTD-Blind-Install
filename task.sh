@@ -7,7 +7,7 @@ echo				-	RTD System System Managment Bootstrap Script      -
 #::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 #::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 #:: Author(s):   	SLS, KLS, NB.  Buffalo Center, IA & Avarua, Cook Islands
-#:: Version:	1.06
+#:: Version:	1.00
 #::
 #::
 #:: Purpose: 	The purpose of the script is to decide what scripts to download based
@@ -92,7 +92,7 @@ tell_info() {
 task_setup_rtd_basics() {
 	echo "Linux OS Found: Attempting to get instructions for Linux..." 
 	wget -q  $_RTDSRC -P $_RTDCACHE 
-	unzip -o -j $_RTDCACHE/master.zip -d $_RTDSCR  -x *.png *.md *.yml *.cmd && rm -v $_RTDCACHE/master.zip >> 
+	unzip -o -j $_RTDCACHE/master.zip -d $_RTDSCR  -x *.png *.md *.yml *.cmd && rm -v $_RTDCACHE/master.zip
 	echo "Instructions sucessfully retrieved..." 
 	chmod +x $_RTDSCR/* 
 	pushd /bin
