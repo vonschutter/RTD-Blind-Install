@@ -58,7 +58,7 @@ _RTDSRC=https://github.com/vonschutter/RTD-Build/archive/master.zip
 
 # Determine log file directory
 _ERRLOGFILE=$_RTDLOGSD/post-install-error.log
-_LOGFILE=$_RTDLOGSD/post-install.log 
+_LOGFILE=$_RTDLOGSD/post-install.log
 _STATUSLOG=$_RTDLOGSD/post-install-status.log
 
 #::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
@@ -107,5 +107,5 @@ task_setup_ssh_keys() {
 }
 
 tell_info &>> $_LOGFILE
-task_setup_rtd_basic &>> $_LOGFILEs
+task_setup_rtd_basics &>> $_LOGFILEs
 task_setup_ssh_keys &>> $_LOGFILE
