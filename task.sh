@@ -79,15 +79,15 @@ tell_info() {
 	echo "starting post install tasks..." 
 	echo "SYSTEM information:"		
 	echo "File system information: "  	
-	mount 					
+	mount 				
 	echo "Block Devices: "  		
 	lsblk   				
 	echo "available space: "  		
 	df -h  					
 	echo "Process information: "  		
 	ps aux 					
-	
 } 
+
 
 task_setup_rtd_basics() {
 	echo "Linux OS Found: Attempting to get instructions for Linux..." 
@@ -100,12 +100,17 @@ task_setup_rtd_basics() {
 	popd
 }
 
+
 task_setup_ssh_keys() {
 	mkdir  -p --mode=0700 /root/.ssh && cat /opt/rtd/custom/userkey.pub > /root/.ssh/authorized_keys 
 	mkdir --mode=0700 /home/tangarora/.ssh && cat /opt/rtd/custom/userkey.pub > /home/tangarora/.ssh/authorized_keys 
 	chown -R tangarora /home/tangarora/.ssh && chmod 0700 -R /home/tangarora/.ssh 
 }
 
+
+
 tell_info &>> $_LOGFILE
 task_setup_rtd_basics &>> $_LOGFILE
 task_setup_ssh_keys &>> $_LOGFILE
+
+
