@@ -108,6 +108,25 @@ task_setup_ssh_keys() {
 }
 
 
+task_setup_oem_run_once() {
+
+cat << CREATE_START_LINK > /etc/xdg/autostart/org.runtimedata.oem.cofig.desktop
+# This will automatically start the RuntTime Data OEM config options on 
+# the first login. Once run this launcher will be moved to the /opt/rtd folder
+# so that subsequent logins will not be plagued by the OEM setup.
+# 
+[Desktop Entry]
+Type=Application
+Exec=/opt/rtd/scripts/rtd-oem-linux-config.sh 
+Terminal=true
+Hidden=false
+X-GNOME-Autostart-enabled=true
+Name=Rintime Data Configuration Menu
+Comment=start OEM configuration as user when you log in
+CREATE_START_LINK
+
+}
+
 
 tell_info &>> $_LOGFILE
 task_setup_rtd_basics &>> $_LOGFILE
