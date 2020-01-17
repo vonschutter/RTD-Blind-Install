@@ -107,5 +107,5 @@ task_setup_ssh_keys() {
 }
 
 tell_info &>> $_LOGFILE
-task_setup_rtd_basics &>> $_LOGFILEs
+task_setup_rtd_basics &>> $_LOGFILE
 task_setup_ssh_keys &>> $_LOGFILE
