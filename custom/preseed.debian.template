@@ -99,8 +99,8 @@ d-i keymap select se
 # Network setup. This can be a static setup or dhcp. 
 d-i netcfg/choose_interface select auto
 d-i netcfg/hostname string device
-d-i netcfg/get_hostname string device
-d-i netcfg/get_domain string unnamed
+d-i netcfg/get_hostname string unassigned-hostname
+d-i netcfg/get_domain string unassigned-domain
 d-i hw-detect/load_firmware boolean true
 # If you want the preconfiguration file to work on systems both with and
 # without a dhcp server, uncomment these lines and the static network
@@ -115,8 +115,10 @@ d-i netcfg/dhcp_timeout string 60
 d-i hw-detect/load_firmware boolean true
 d-i netcfg/choose_interface select auto
 d-i netcfg/wireless_essid string loader
+d-i netcfg/wireless_essid_again loader
 d-i netcfg/wireless_security_type select wep/open
 d-i netcfg/wireless_wpa string
+d-i netcfg/wireless_wep string :s
 # --------------------------------------------------- #
 
 
@@ -128,7 +130,8 @@ d-i mirror/country string manual
 d-i mirror/http/hostname string ftp2.de.debian.org
 d-i mirror/http/directory string /debian
 d-i mirror/http/proxy string
-d-i mirror/suite string testing
+#d-i mirror/suite string [testing, stable, unstable]
+#d-i mirror/udeb/suite string [testing, stable, unstable]
 
 # Suite to use for loading installer components (optional).
 # d-i mirror/udeb/suite string testing
