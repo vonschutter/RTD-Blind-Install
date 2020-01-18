@@ -98,7 +98,7 @@ d-i keymap select se
 # --------------------------------------------------- #
 # Network setup. This can be a static setup or dhcp. 
 d-i netcfg/choose_interface select auto
-#d-i netcfg/hostname string RTD-Client
+d-i netcfg/hostname string RTD-Client
 d-i netcfg/get_hostname string unassigned-hostname
 d-i netcfg/get_domain string unassigned-domain
 d-i hw-detect/load_firmware boolean true
@@ -117,9 +117,8 @@ d-i netcfg/dhcp_options select Configure network manually
 # d-i netcfg/confirm_static boolean true
 
 d-i netcfg/wireless_essid string loader
-d-i netcfg/wireless_essid_again string
-d-i netcfg/wireless_security_type select wep/open
-#d-i netcfg/wireless_wpa string letmein1234
+d-i netcfg/wireless_security_type select wpa
+d-i netcfg/wireless_wpa string letmein1234
 
 # --------------------------------------------------- #
 
