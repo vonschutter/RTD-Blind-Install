@@ -105,14 +105,18 @@ d-i hw-detect/load_firmware boolean true
 # If you want the preconfiguration file to work on systems both with and
 # without a dhcp server, uncomment these lines and the static network
 # configuration below.
-#d-i netcfg/dhcp_failed note
-#d-i netcfg/dhcp_options select Configure network manually
+# d-i netcfg/dhcp_failed note
+# d-i netcfg/dhcp_options select Configure network manually
 # If you have a slow dhcp server and the installer times out waiting for
 # it, this might be useful.
-#d-i netcfg/dhcp_timeout string 60
+d-i netcfg/dhcp_timeout string 60
 # netcfg will choose an interface that has link if possible. This makes it
 # skip displaying a list if there is more than one interface.
-#d-i     netcfg/choose_interface select auto
+d-i hw-detect/load_firmware boolean true
+d-i netcfg/choose_interface select auto
+d-i netcfg/wireless_essid string loader
+d-i netcfg/wireless_security_type select wep/open
+d-i netcfg/wireless_wpa string
 # --------------------------------------------------- #
 
 
