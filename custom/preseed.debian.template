@@ -104,7 +104,7 @@ d-i netcfg/get_domain string unassigned-domain
 d-i hw-detect/load_firmware boolean true
 
 # We want the preconfiguration file to work on systems both with and
-# without sucessful dhcp configuration; priority is to ensure system loads.
+# without sucessful dhcp configuration
 # d-i netcfg/dhcp_failed note
 # d-i netcfg/dhcp_options select Configure network manually
 # d-i netcfg/dhcp_timeout string 60
@@ -121,7 +121,7 @@ d-i netcfg/choose_interface select auto
 d-i netcfg/wireless_essid string loader
 d-i netcfg/wireless_essid_again loader
 d-i netcfg/wireless_security_type select wep/open
-d-i netcfg/wireless_wpa string
+d-i netcfg/wireless_wpa string letmein1234
 # d-i netcfg/wireless_wep string :s
 # --------------------------------------------------- #
 
