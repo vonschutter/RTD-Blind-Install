@@ -103,13 +103,12 @@ d-i netcfg/get_hostname string unassigned-hostname
 d-i netcfg/get_domain string unassigned-domain
 d-i hw-detect/load_firmware boolean true
 
-# If you want the preconfiguration file to work on systems both with and
-# without a dhcp server, uncomment these lines and the static network
-# configuration below.
+# We want the preconfiguration file to work on systems both with and
+# without sucessful dhcp configuration; priority is to ensure system loads.
 d-i netcfg/dhcp_failed note
 d-i netcfg/dhcp_options select Configure network manually
 # d-i netcfg/dhcp_timeout string 60
-#
+
 # IPv4 Static reserve configuration:
 d-i netcfg/get_ipaddress string 192.168.1.233
 d-i netcfg/get_netmask string 255.255.255.0
@@ -132,14 +131,11 @@ d-i netcfg/wireless_wpa string
 # Mirror settings
 # --------------------------------------------------- #
 d-i mirror/country string manual
-d-i mirror/http/hostname string ftp2.de.debian.org
+d-i mirror/http/hostname string http.us.debian.org
 d-i mirror/http/directory string /debian
 d-i mirror/http/proxy string
-#d-i mirror/suite string [testing, stable, unstable]
-#d-i mirror/udeb/suite string [testing, stable, unstable]
-
-# Suite to use for loading installer components (optional).
-d-i mirror/udeb/suite string stable
+# d-i mirror/suite string [testing, stable, unstable]
+# d-i mirror/udeb/suite string [testing, stable, unstable]
  
 # --------------------------------------------------- #
 
