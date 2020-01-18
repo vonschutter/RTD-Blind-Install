@@ -88,26 +88,38 @@ d-i console-setup/ask_detect boolean false
 
 
 
+
 # --------------------------------------------------- #
 # Network configuration
 # --------------------------------------------------- #
+# Network setup. This can be a static setup or dhcp. 
 d-i netcfg/choose_interface select auto
-d-i netcfg/hostname string device
-d-i netcfg/get_hostname string device
-d-i netcfg/get_domain string unnamed
+d-i netcfg/hostname string RTD-Client
+d-i netcfg/get_hostname string unassigned-hostname
+d-i netcfg/get_domain string unassigned-domain
 d-i hw-detect/load_firmware boolean true
-# If you want the preconfiguration file to work on systems both with and
-# without a dhcp server, uncomment these lines and the static network
-# configuration below.
+
+# We want the preconfiguration file to work on systems both with and
+# without sucessful dhcp configuration
 d-i netcfg/dhcp_failed note
 d-i netcfg/dhcp_options select Configure network manually
-# If you have a slow dhcp server and the installer times out waiting for
-# it, this might be useful.
-d-i netcfg/dhcp_timeout string 60
-# netcfg will choose an interface that has link if possible. This makes it
-# skip displaying a list if there is more than one interface.
-d-i netcfg/choose_interface select auto
+# d-i netcfg/dhcp_timeout string 60
+
+# IPv4 Static reserve configuration:
+# d-i netcfg/get_ipaddress string 192.168.1.233
+# d-i netcfg/get_netmask string 255.255.255.0
+# d-i netcfg/get_gateway string 192.168.1.1
+# d-i netcfg/get_nameservers string 192.168.1.1
+# d-i netcfg/confirm_static boolean true
+
+d-i netcfg/wireless_show_essids select manual
+d-i netcfg/wireless_essid string loader
+d-i netcfg/wireless_essid_again string loader
+d-i netcfg/wireless_security_type select wpa
+d-i netcfg/wireless_wpa string letmein1234
+
 # --------------------------------------------------- #
+
 
 
 
@@ -153,23 +165,18 @@ d-i clock-setup/ntp-server string ntp.ubuntu.com
 # sometimes be the USB stick itself. Work around this by rolling our own auto
 # detect logic which disallows installing on USB devices.
 #
-# d-i partman/early_command \
-#    string debconf-set partman-auto/disk "$(echo /dev/`ls -l /sys/block/[hs]d* | grep -v "usb" | head -n1 | sed 's/^.*\([hs]d[a-z]\+\).*$/\1/'`)"
-#d-i partman/early_command \
-#    string debconf-set partman-auto/disk "\$(list-devices disk | head -n1)"
-#d-i partman/early_command string debconf-set partman-auto/disk "$(list-devices disk | grep -v `list-devices usb-partition`)"
-#d-i partman/early_command string \
-#USBDEV=$(list-devices usb-partition | sed "s/\(.*\)./\1/");\
-#BOOTDEV=$(list-devices disk | grep -v "$USBDEV" | head -1);\
-#debconf-set partman-auto/disk $BOOTDEV;\
-#debconf-set grub-installer/bootdev $BOOTDEV; 
-d-i partman/early_command string [ "$(ls -A /tmp)" ] && umount -l /media || echo "Empty" ;
-
+# d-i partman/early_command string [ "$(ls -A /tmp)" ] && umount -l /media || echo "Empty" ;
+d-i partman/early_command string \
+   USBDEV=$(mount | grep hd-media | cut -d" " -f1 | sed "s/\(.*\)./\1/");\
+   BOOTDEV=$(list-devices disk | grep -v \$USBDEV | head -1);\
+   debconf-set partman-auto/disk $BOOTDEV;\
+   debconf-set grub-installer/bootdev $BOOTDEV;
 # d-i partman/early_command umount /media;
+
 # --------------------------------------------------- #
 
-# sed 's/.*\///'
-# sed 's#.*/##'
+
+
 
 # --------------------------------------------------- #
 # EFI
@@ -308,12 +315,9 @@ d-i apt-setup/security_path string /ubuntu
 # --------------------------------------------------- #
 # Package selection
 # --------------------------------------------------- #
-#tasksel tasksel/first multiselect ubuntu-desktop-minimal
+# tasksel tasksel/first multiselect valid choices: 
+# [ubuntu-desktop-minimal kubuntu-desktop, ubuntu-gnome-desktop, lubuntu-desktop, ubuntu-mate-desktop]
 tasksel tasksel/first multiselect oem-replace-me-desktop-selection
-#tasksel tasksel/first multiselect kubuntu-desktop
-#tasksel tasksel/first multiselect ubuntu-gnome-desktop
-#tasksel tasksel/first multiselect lubuntu-desktop
-#tasksel tasksel/first multiselect ubuntu-mate-desktop
 d-i pkgsel/include string openssh-server virt-what wget spice-vdagent
 d-i pkgsel/upgrade select full-upgrade
 d-i pkgsel/update-policy select unattended-upgrades
@@ -342,6 +346,8 @@ d-i preseed/late_command string \
 	in-target wget -O /opt/rtd/scripts/post-install.sh "https://github.com/vonschutter/Blind_Install/raw/master/task.sh" --no-check-certificate ; \
 	in-target chmod +x /opt/rtd/scripts/post-install.sh; \
 	in-target /opt/rtd/scripts/post-install.sh; \
+	umount -l /media || echo "Empty"; \
+	eject || true; \
 	echo "------  task list complete!  ------" 
 
 # Answer the last question 
@@ -349,9 +355,6 @@ d-i debian-installer/splash boolean true
 
 # Option to try to greacefully eject the installation media:
 d-i cdrom-detect/eject boolean true
-
-# Option to forcefully eject the installation media:
-# d-i preseed/late_command string /usr/bin/eject || true 
 
 # Shutdown machine
 d-i finish-install/reboot_in_progress note
