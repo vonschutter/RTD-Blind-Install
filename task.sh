@@ -125,6 +125,8 @@ Name=Rintime Data Configuration Menu
 Comment=start OEM configuration as user when you log in
 CREATE_START_LINK
 
+echo "%sudo ALL=NOPASSWD: /opt/rtd/scripts/rtd-oem-linux-config.sh" >> /etc/sudowers
+
 }
 
 
