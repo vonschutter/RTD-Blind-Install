@@ -113,7 +113,7 @@ cat << CREATE_START_LINK > /etc/xdg/autostart/org.runtimedata.oem.cofig.desktop
 # 
 [Desktop Entry]
 Type=Application
-Exec=/opt/rtd/scripts/rtd-oem-linux-config.sh 
+Exec=sudo /opt/rtd/scripts/rtd-oem-linux-config.sh 
 Terminal=true
 Hidden=false
 X-GNOME-Autostart-enabled=true
