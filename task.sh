@@ -61,19 +61,15 @@ _ERRLOGFILE=$_RTDLOGSD/post-install-error.log
 _LOGFILE=$_RTDLOGSD/post-install.log
 _STATUSLOG=$_RTDLOGSD/post-install-status.log
 
+
+
+
+
 #::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 #::::::::::::::                                          ::::::::::::::::::::::
-#::::::::::::::          Execute tasks                   ::::::::::::::::::::::
+#::::::::::::::          Define tasks as functions       ::::::::::::::::::::::
 #::::::::::::::                                          ::::::::::::::::::::::
 #::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-
-#:: Given that Bash or other Shell environment has been detected and the POSIX chell portion of this script is executed,
-#:: the second stage script must be downloaded from an online location. Depending on the distribution of OS
-#:: there are different methods available to get and run remote files. 
-#::
-#:: Table of evaluating family of OS and executing the appropriate action fiven the OS found.
-#:: In this case it is easier to manage a straight table than a for loop or array:
-
 
 tell_info() {
 	echo "starting post install tasks..." 
@@ -125,13 +121,27 @@ Name=Rintime Data Configuration Menu
 Comment=start OEM configuration as user when you log in
 CREATE_START_LINK
 
-echo "%sudo ALL=NOPASSWD: /opt/rtd/scripts/rtd-oem-linux-config.sh" >> /etc/sudowers
-
 }
 
+
+task_enable_oem_finish() {
+	# Add instruction to a sudoers include file:
+	# This should be removed when OEM setup is complete as it would represent a back door... 
+	echo "tangarora ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers.d/99_sudo_include_file
+
+	# Check that your sudoers include file passed the visudo syntax checks:
+	sudo visudo -cf /etc/sudoers.d/99_sudo_include_file
+}
+
+
+#::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+#::::::::::::::                                          ::::::::::::::::::::::
+#::::::::::::::          Execute tasks                   ::::::::::::::::::::::
+#::::::::::::::                                          ::::::::::::::::::::::
+#::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 tell_info &>> $_LOGFILE
 task_setup_rtd_basics &>> $_LOGFILE
 task_setup_ssh_keys &>> $_LOGFILE
 task_setup_oem_run_once &>> $_LOGFILE
-
+task_enable_oem_finish
