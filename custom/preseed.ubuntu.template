@@ -40,11 +40,14 @@
 # --------------------------------------------------- #
 # Unattended Installation
 # --------------------------------------------------- #
+# Simple instruction to tell the debian installer that
+# this is intended to be an unattended install and to only
+# ask critical questions (wich we will answer in this file)
 d-i auto-install/enable boolean true
 d-i debconf/priority select critical 
 # --------------------------------------------------- #
 
-
+ 
 # --------------------------------------------------- #
 # Install the KDE/Gnome oem-config frontend 
 # --------------------------------------------------- #
@@ -65,6 +68,9 @@ d-i debconf/priority select critical
 # --------------------------------------------------- #
 # Localization
 # --------------------------------------------------- #
+# Provide localizaton preferences so that the prefferred
+# language is used for display and formats. Comparable to 
+# the MUI in Microsoft environments.
 d-i debian-installer/locale string en_US.UTF-8
 d-i localechooser/supported-locales multiselect en_US.UTF-8, se_SE.UTF-8
 d-i console-setup/ask_detect boolean false
@@ -75,8 +81,9 @@ d-i console-setup/ask_detect boolean false
 # --------------------------------------------------- #
 # Set Keyboard layout
 # --------------------------------------------------- #
-# 
-
+# Set the prefferred keyboard layout. Keyboards will work
+# regardless, but the letters and symbols may not actually
+# be the ones drawn on the keys. Default is us.
 d-i keyboard-configuration/xkb-keymap select se
 d-i keyboard-configuration/layoutcode string se
 d-i debian-installer/keymap select se
@@ -126,6 +133,7 @@ d-i netcfg/wireless_wpa string letmein1234
 # --------------------------------------------------- #
 # Mirror settings
 # --------------------------------------------------- #
+# Distribution speciffic information:
 d-i mirror/country string manual
 d-i mirror/http/hostname string archive.ubuntu.com
 d-i mirror/http/directory string /ubuntu
@@ -137,6 +145,11 @@ d-i mirror/http/proxy string
 # --------------------------------------------------- #
 # Account setup (temporary user account)
 # --------------------------------------------------- #
+# Setup an initial user and disable root login by default. 
+# root login may be re-enabled later by setting a root password.
+# An encrypted password is set here, and should be changed
+# ASAP after the system is built. Preferebly connect to LDAP/AD
+# in a managed environment.
 d-i passwd/root-login boolean false
 d-i passwd/user-fullname string Ubuntu User
 d-i passwd/username string tangarora
@@ -194,7 +207,7 @@ d-i partman-efi/non_efi_system boolean true
 
 
 # --------------------------------------------------- #
-# Grub
+# GRUB bootloader installation
 # --------------------------------------------------- #
 #
 # Tell the grub-installer to install to the MBR even if it also finds some other
@@ -224,6 +237,10 @@ d-i partman-auto/method string crypto
 d-i partman-crypto/passphrase password letmein1234
 d-i partman-crypto/passphrase-again password letmein1234
 # DO Please remember to change this password after install!!!!
+# You may do this with the cryptsetup utility on a server, or using the "disks"  tool. 
+# Alternatively this is easily done with the rtd-simple-server-support-tool under 
+# "Manage encryption phrases and passwords" where you can check if the phrase you want to use
+# has been p0wned and currently for sale or not. 
 
 # When disk encryption is enabled, skip wiping the partitions beforehand since it takes too much time.
 d-i partman-auto-crypto/erase_disks boolean false
@@ -302,6 +319,9 @@ d-i base-installer/kernel/image string linux-generic
 # --------------------------------------------------- #
 # Apt setup
 # --------------------------------------------------- #
+# You can choose to install non-free and contrib software.
+# Optionally, enable i386 architecture or others, as well as setup 
+# where to pull security updates from.
 d-i apt-setup/restricted boolean true
 d-i apt-setup/universe boolean true
 d-i apt-setup/backports boolean true
@@ -315,12 +335,22 @@ d-i apt-setup/security_path string /ubuntu
 # --------------------------------------------------- #
 # Package selection
 # --------------------------------------------------- #
-# tasksel tasksel/first multiselect valid choices: 
+# Packages may be selected as groups (meta packages) like kde-desktop or
+# as individual packages. Only one "pkgsel/include" string will be used though! 
+# remembder to fit all the packages you want on one line. 
+# tasksel tasksel/first multiselect standard options: 
 # [ubuntu-desktop-minimal kubuntu-desktop, ubuntu-gnome-desktop, lubuntu-desktop, ubuntu-mate-desktop]
 tasksel tasksel/first multiselect oem-replace-me-desktop-selection
 d-i pkgsel/include string openssh-server virt-what wget spice-vdagent
+
+# Valid choices for pkgsel/upgrade are: safe-upgrade full-upgrade none
 d-i pkgsel/upgrade select full-upgrade
 d-i pkgsel/update-policy select unattended-upgrades
+
+# By default, the system’s locate database will be updated after the
+# installer has finished installing most packages. This may take a while, so
+# if you don’t want it, you can set this to "false" to turn it off.
+# d-i pkgsel/updatedb boolean false
 # --------------------------------------------------- #
 
 

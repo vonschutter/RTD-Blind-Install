@@ -85,10 +85,12 @@ d-i console-setup/ask_detect boolean false
 # regardless, but the letters and symbols may not actually
 # be the ones drawn on the keys. Default is us.
 d-i keyboard-configuration/xkb-keymap select se
+d-i keyboard-configuration/layoutcode string se
 d-i debian-installer/keymap select se
 d-i keymap select se
-#d-i keyboard-configuration/xkb-keymap select us
-#d-i keyboard-configuration/layoutcode string us
+d-i console-setup/layoutcode string se
+d-i console-setup/ask_detect boolean false
+
 # --------------------------------------------------- #
 
 
@@ -129,10 +131,12 @@ d-i netcfg/wireless_wpa string letmein1234
 # --------------------------------------------------- #
 # Mirror settings
 # --------------------------------------------------- #
+# Distribution speciffic information:
 d-i mirror/country string manual
 d-i mirror/http/hostname string deb.debian.org
 d-i mirror/http/directory string /debian
 d-i mirror/http/proxy string
+# Uncomment below to enable install of a different suite:
 # d-i mirror/suite string [testing, stable, unstable]
 # d-i mirror/udeb/suite string [testing, stable, unstable]
  
@@ -146,7 +150,8 @@ d-i mirror/http/proxy string
 # Setup an initial user and disable root login by default. 
 # root login may be re-enabled later by setting a root password.
 # An encrypted password is set here, and should be changed
-# ASAP after the system is built.
+# ASAP after the system is built. Preferebly connect to LDAP/AD
+# in a managed environment.
 d-i passwd/root-login boolean false
 d-i passwd/user-fullname string RTD User
 d-i passwd/username string tangarora
@@ -203,7 +208,7 @@ d-i partman-efi/non_efi_system boolean true
 
 
 # --------------------------------------------------- #
-# Grub bootloader installation
+# GRUB bootloader installation
 # --------------------------------------------------- #
 #
 # Tell the grub-installer to install to the MBR even if it also finds some other
@@ -233,6 +238,10 @@ d-i partman-auto/method string crypto
 d-i partman-crypto/passphrase password letmein1234
 d-i partman-crypto/passphrase-again password letmein1234
 # DO Please remember to change this password after install!!!!
+# You may do this with the cryptsetup utility on a server, or using the "disks"  tool. 
+# Alternatively this is easily done with the rtd-simple-server-support-tool under 
+# "Manage encryption phrases and passwords" where you can check if the phrase you want to use
+# has been p0wned and currently for sale or not. 
 
 # When disk encryption is enabled, skip wiping the partitions beforehand since it takes too much time.
 d-i partman-auto-crypto/erase_disks boolean false
