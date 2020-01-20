@@ -375,10 +375,12 @@ d-i preseed/late_command string \
 	mkdir -p /target/opt/rtd/log; \
 	cp -r /custom /target/opt/rtd/custom; \
 	cp /preseed.cfg /target/opt/rtd/log/; \
-	in-target wget -O /opt/rtd/scripts/post-install.sh "https://github.com/vonschutter/Blind_Install/raw/master/task.sh" --no-check-certificate ; \
+	in-target wget -O /opt/rtd/scripts/post-install.sh "https://github.com/vonschutter/Blind_Install/raw/master/custom/task.sh" --no-check-certificate ; \
 	in-target chmod +x /opt/rtd/scripts/post-install.sh; \
 	in-target /opt/rtd/scripts/post-install.sh; \
-	echo "------  task list complete!  ------" 
+        umount -l /media || echo "Empty"; \
+	eject || true; \
+	echo "------  initial Setup Complete!  ------" 
 
 
 # Answer the last question 
