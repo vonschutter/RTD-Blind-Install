@@ -105,6 +105,9 @@ task_setup_ssh_keys() {
 
 
 task_setup_oem_run_once() {
+	# Task to run the OEM post configuaration on first login. 
+	# the OEM post configuration may allow for interaction if desired and would
+	# best run on several distributions and in a full graphic environment. 
 
 cat << CREATE_START_LINK > /etc/xdg/autostart/org.runtimedata.oem.cofig.desktop
 # This will automatically start the RuntTime Data OEM config options on 
@@ -136,6 +139,12 @@ task_enable_oem_finish() {
 
 
 task_ensure_oem_auto_login() {
+	# task to ensure that the temporary OEM user is loged in for 
+	# admin purposes. It is better to install crtail software at this 
+	# time since a full graphic environment is avaliable. Also the 
+	# step 2 inst the OEM load process is optimally able to run 
+	# on several distributions. 
+
 
 cat << OEM_LXDM_LOGIN_OPTION > /etc/lightdm/lightdm.conf
 [SeatDefaults]
@@ -145,7 +154,12 @@ user-session=Lubuntu
 greeter-session=lightdm-gtk-greeter
 OEM_LXDM_LOGIN_OPTION
 
+cat << OEM_SDDM_LOGIN_OPTION > /etc/sddm.conf.d/autologin.conf
 
+[Autologin]
+User=$OEM_USER
+Session=plasma.desktop
+OEM_SDDM_LOGIN_OPTION
 
 }
 
@@ -158,8 +172,9 @@ OEM_LXDM_LOGIN_OPTION
 #::::::::::::::                                          ::::::::::::::::::::::
 #::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-tell_info 			&>> $_LOGFILE
-task_setup_rtd_basics 		&>> $_LOGFILE
-task_setup_ssh_keys 		&>> $_LOGFILE
-task_setup_oem_run_once 	&>> $_LOGFILE
-task_enable_oem_finish 		&>> $_LOGFILE
+tell_info			&>> $_LOGFILE
+task_setup_rtd_basics		&>> $_LOGFILE
+task_setup_ssh_keys		&>> $_LOGFILE
+task_setup_oem_run_once		&>> $_LOGFILE
+task_enable_oem_finish		&>> $_LOGFILE
+task_ensure_oem_auto_login	&>> $_LOGFILE
