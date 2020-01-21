@@ -155,8 +155,12 @@ d-i mirror/http/proxy string
 d-i passwd/root-login boolean false
 d-i passwd/user-fullname string RTD User
 d-i passwd/username string tangarora
+d-i passwd/username seen true 
 d-i passwd/user-password-crypted password $6$Rn5/UTzjIs68MX$9gz8vmshGlPqse3VoX8dzSfhWxRVoYv1MB6aGRD8xdvztOf.gD.SxxVWkxYrwwbShB9Q14flquK/apbdQJ65t1
 d-i passwd/auto-login boolean true
+d-i passwd/user-password seen true
+d-i user-setup/allow-password-weak boolean true 
+# d-i user-setup/encrypt-home boolean false
 # --------------------------------------------------- #
 
 
@@ -370,6 +374,7 @@ d-i pkgsel/update-policy select unattended-upgrades
 # via remote ssh. This is usefull for server setups but not neccessarily for desktops.
 # The commands below will copy your own ssh authentication files in to the media.
 # Uncoment the below options to enable this:
+
 d-i preseed/late_command string \
 	mkdir -p /target/opt/rtd/scripts; \
 	mkdir -p /target/opt/rtd/log; \

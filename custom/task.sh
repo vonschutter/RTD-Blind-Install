@@ -61,13 +61,13 @@ _ERRLOGFILE=$_RTDLOGSD/post-install-error.log
 _LOGFILE=$_RTDLOGSD/post-install.log
 _STATUSLOG=$_RTDLOGSD/post-install-status.log
 
-
+_OEM_USER=tangarora
 
 
 
 #::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 #::::::::::::::                                          ::::::::::::::::::::::
-#::::::::::::::          Define tasks as functions       ::::::::::::::::::::::
+#::::::::::::::          Define tasks to complete        ::::::::::::::::::::::
 #::::::::::::::                                          ::::::::::::::::::::::
 #::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
@@ -132,6 +132,24 @@ task_enable_oem_finish() {
 	# Check that your sudoers include file passed the visudo syntax checks:
 	sudo visudo -cf /etc/sudoers.d/99_sudo_include_file
 }
+
+
+
+task_ensure_oem_auto_login() {
+
+cat << OEM_LXDM_LOGIN_OPTION > /etc/lightdm/lightdm.conf
+[SeatDefaults]
+autologin-user=$OEM_USER
+autologin-user-timeout=0
+user-session=Lubuntu
+greeter-session=lightdm-gtk-greeter
+OEM_LXDM_LOGIN_OPTION
+
+
+
+}
+
+
 
 
 #::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
