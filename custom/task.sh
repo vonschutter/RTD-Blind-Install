@@ -151,8 +151,6 @@ cat << OEM_LXDM_LOGIN_OPTION > /etc/lightdm/lightdm.conf
 [SeatDefaults]
 autologin-user=$_OEM_USER
 autologin-user-timeout=0
-user-session=lxsession
-greeter-session=lightdm
 OEM_LXDM_LOGIN_OPTION
 
 	echo "Creating /etc/sddm.conf.d/autologin.conf"
