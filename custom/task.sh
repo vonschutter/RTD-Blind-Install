@@ -149,7 +149,7 @@ task_ensure_oem_auto_login() {
 mkdir -p /etc/lightdm
 cat << OEM_LXDM_LOGIN_OPTION > /etc/lightdm/lightdm.conf
 [SeatDefaults]
-autologin-user=$OEM_USER
+autologin-user=$_OEM_USER
 autologin-user-timeout=0
 user-session=Lubuntu
 greeter-session=lightdm-gtk-greeter
@@ -160,7 +160,7 @@ mkdir -p /etc/sddm.conf.d
 cat << OEM_SDDM_LOGIN_OPTION > /etc/sddm.conf.d/autologin.conf
 
 [Autologin]
-User=$OEM_USER
+User=$_OEM_USER
 Session=plasma.desktop
 OEM_SDDM_LOGIN_OPTION
 
