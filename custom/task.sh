@@ -145,7 +145,8 @@ task_ensure_oem_auto_login() {
 	# step 2 inst the OEM load process is optimally able to run 
 	# on several distributions. 
 
-
+	echo "Creating /etc/lightdm/lightdm.conf"
+mkdir -p /etc/lightdm
 cat << OEM_LXDM_LOGIN_OPTION > /etc/lightdm/lightdm.conf
 [SeatDefaults]
 autologin-user=$OEM_USER
@@ -154,6 +155,8 @@ user-session=Lubuntu
 greeter-session=lightdm-gtk-greeter
 OEM_LXDM_LOGIN_OPTION
 
+	echo "Creating /etc/sddm.conf.d/autologin.conf"
+mkdir -p /etc/sddm.conf.d
 cat << OEM_SDDM_LOGIN_OPTION > /etc/sddm.conf.d/autologin.conf
 
 [Autologin]
