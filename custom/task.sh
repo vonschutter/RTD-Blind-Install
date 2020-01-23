@@ -245,6 +245,7 @@ chmod 0440 /etc/crypttab
 #
 # 7. Generate a new initramfs disk
 #
+# apt remove 
  mkinitramfs -o /boot/initrd.img-$(uname -r)  $(uname -r)
 
 
@@ -266,3 +267,4 @@ task_setup_ssh_keys		&>> $_LOGFILE
 task_setup_oem_run_once		&>> $_LOGFILE
 task_enable_oem_finish		&>> $_LOGFILE
 task_ensure_oem_auto_login	&>> $_LOGFILE
+task_oem_autounlock_disk	&>> $_LOGFILE
