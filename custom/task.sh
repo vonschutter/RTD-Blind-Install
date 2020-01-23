@@ -226,7 +226,7 @@ echo letmein1234 | cryptsetup -v luksAddKey $(blkid | grep crypto_LUKS|  cut -d 
 chmod 0777 /etc/crypttab
 # sed -i s/oem-replace-me-desktop-selection/$PREFERENCE/g "$SCRIPT_DIR/custom/preseed.cfg"
 cp /etc/crypttab /etc/crypttab.temporary
-sed -i '/"$(cat /etc/crypttab | cut -d " " -f 1-2 )"/d' /etc/crypttab.temporary 
+sed -i /"$(cat /etc/crypttab | cut -d " " -f 1 )"/d /etc/crypttab.temporary 
 echo $(cat /etc/crypttab | cut -d " " -f 1-2)  /$(udevadm info $(blkid | grep crypto_LUKS|  cut -d : -f 1) |grep by-uuid | cut -d : -f 2 | head -1):/keyfile luks,keyscript=/lib/cryptsetup/scripts/pa$  >> /etc/crypttab.temporary
 mv /etc/crypttab /etc/crypttab.back
 mv /etc/crypttab.temporary /etc/crypttab
@@ -245,7 +245,7 @@ chmod 0440 /etc/crypttab
 #
 # 7. Generate a new initramfs disk
 #
- mkinitramfs -o /boot/initrd.img-4.9.0-7-amd64  4.9.0-7-amd64
+ mkinitramfs -o /boot/initrd.img-$(uname -r)  $(uname -r)
 
 
 }
