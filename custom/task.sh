@@ -225,9 +225,10 @@ echo letmein1234 | cryptsetup -v luksAddKey $(blkid | grep crypto_LUKS|  cut -d 
 # $(udevadm info $(blkid | grep crypto_LUKS|  cut -d : -f 1) |grep by-uuid | cut -d : -f 2 | head -1)
 chmod 0777 /etc/crypttab
 # sed -i s/oem-replace-me-desktop-selection/$PREFERENCE/g "$SCRIPT_DIR/custom/preseed.cfg"
-oem_old_crypttab_line="$(cat /etc/crypttab | cut -d " " -f 1-10 )"
-oem_new_crypttab_line="$(cat /etc/crypttab | cut -d " " -f 1)  $(cat /etc/crypttab | cut -d " " -f 2) /$(udevadm info $(blkid | grep crypto_LUKS|  cut -d : -f 1) |grep by-uuid | cut -d : -f 2 | head -1):/keyfile luks,keyscript=/lib/cryptsetup/scripts/pa$ >> /etc/crypttab"
-sed -i s/$oem_old_crypttab_line/$oem_new_crypttab_line/g "/etc/crypttab"
+sed '/"$(cat /etc/crypttab | cut -d " " -f 1-2 )"/d' /etc/crypttab 
+echo $(cat /etc/crypttab | cut -d " " -f 1-2)  /$(udevadm info $(blkid | grep crypto_LUKS|  cut -d : -f 1) |grep by-uuid | cut -d : -f 2 | head -1):/keyfile luks,keyscript=/lib/cryptsetup/scripts/pa$ ) >> /etc/crypttab
+
+#sed -i s/"$oem_old_crypttab_line"/"$oem_new_crypttab_line"/g "/etc/crypttab"
 chmod 0440 /etc/crypttab
 
 
