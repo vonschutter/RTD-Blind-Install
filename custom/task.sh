@@ -222,7 +222,13 @@ echo letmein1234 | cryptsetup -v luksAddKey $(blkid | grep crypto_LUKS|  cut -d 
 #    Replace the 4th parameter ‐ luks‐ with luks,keyscript=/lib/cryptsetup/scripts/passdev
 #
 # The final result:
- sda5_crypt UUID=9b7200b5-0e0a-447a-93a8-7eb8f1f4a1ee /dev/disk/by-uuid/2a5e9b7f-2128-4a50-83b6-d1c285410145:/keyfile luks,keyscript=/lib/cryptsetup/scripts/pa$
+# $(udevadm info $(blkid | grep crypto_LUKS|  cut -d : -f 1) |grep by-uuid | cut -d : -f 2 | head -1)
+chmod 0777 /etc/crypttab
+echo $(cat /etc/crypttab | cut -d " " -f 1)  $(cat /etc/crypttab | cut -d " " -f 2) /$(udevadm info $(blkid | grep crypto_LUKS|  cut -d : -f 1) |grep by-uuid | cut -d : -f 2 | head -1):/keyfile luks,keyscript=/lib/cryptsetup/scripts/pa$ >> /etc/crypttab
+chmod 0440 /etc/crypttab
+
+
+
 #
 # In this case the UUID for our /dev/sda1 UUID was 2a5e9b7f....
 # If you run into any issues with file permissions, run:
