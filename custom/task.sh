@@ -126,6 +126,7 @@ CREATE_START_LINK
 }
 
 
+
 task_enable_oem_finish() {
 	# Add instruction to a sudoers include file:
 	# This should be removed when OEM setup is complete as it would represent a back door... 
@@ -166,34 +167,35 @@ OEM_SDDM_LOGIN_OPTION
 
 
 task_oem_autounlock_disk() {
-	# Setup automatic unlocking of the encrypted system disk (defaul on RTD systems).
+	# Setup automatic unlocking of the encrypted system disk (encryption is default on RTD systems).
 	# NOTE: This will render the encryption useless since the key to unlock the encrypted
 	# volume will be located on an unencrypted location on the same system as the encrypted volume. 
+	# This is the same as locking your door and leaving the key by the door outside. 
 	#
 	# The intention behind this is to be able to complete all build activites without manual intervention
-	# of any kind. The intension is to remove the key file after all administrative tasks are complete. 
+	# of any kind. The intention is to remove the key file after all administrative tasks are complete. 
 
 	# 1. Back up your initramfs disk
 	cp  /boot/initrd.img-$(uname -r)  /boot/initrd.img-$(uname -r).bak
 
-	### BEGIN /etc/grub.d/10_linux ###
-	#...
-	# cat << OEM_CRYPTLOCK_OPTION > /boot/grub/grub.cfg
-	# menuentry 'Debian GNU/Linux, with Linux 4.9.0-7-amd64 (crypto safe)' --class debian --class gnu-linux --class gnu --class os {
-	#       load_video
-	#       insmod gzio
-	#       insmod part_msdos
-	#       insmod ext2
-	#       set root='hd0,msdos1'
-	#       search --no-floppy --fs-uuid --set=root 2a5e9b7f-2128-4a50-83b6-d1c285410145
-	#       echo    'Loading Linux 4.9.0-7-amd64 ...'
-	#       linux   /vmlinuz-4.9.0-7-amd64 root=/dev/mapper/dradispro-root ro  quiet
-	#       echo    'Loading initial ramdisk ...'
-	#       initrd  /initrd.img-4.9.0-7-amd64.safe
-	# }
-	# ...
-	### END /etc/grub.d/10_linux ###
-	# OEM_CRYPTLOCK_OPTION
+		# cat << OEM_CRYPTLOCK_OPTION > /boot/grub/grub.cfg
+		#### BEGIN /etc/grub.d/10_linux ###
+		#
+		# menuentry 'Debian GNU/Linux, with Linux $(uname -r) (crypto safe)' --class debian --class gnu-linux --class gnu --class os {
+		#       load_video
+		#       insmod gzio
+		#       insmod part_msdos
+		#       insmod ext2
+		#       set root='hd0,msdos1'
+		#       search --no-floppy --fs-uuid --set=root 2a5e9b7f-2128-4a50-83b6-d1c285410145
+		#       echo    'Loading Linux $(uname -r) ...'
+		#       linux   /vmlinuz-$(uname -r) root=/dev/mapper/dradispro-root ro  quiet
+		#       echo    'Loading initial ramdisk ...'
+		#       initrd  /initrd.img-$(uname -r).safe
+		# }
+		# ...
+		### END /etc/grub.d/10_linux ###
+		# OEM_CRYPTLOCK_OPTION
 
 	# 2. Create the key file in the unencrypted /boot partition
 	dd if=/dev/urandom of=/boot/keyfile bs=1024 count=4
