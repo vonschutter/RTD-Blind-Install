@@ -146,7 +146,7 @@ task_ensure_oem_auto_login() {
 	# on several distributions. 
 
 	echo "Creating /etc/lightdm/lightdm.conf"
-mkdir -p /etc/lightdm
+	mkdir -p /etc/lightdm
 cat << OEM_LXDM_LOGIN_OPTION > /etc/lightdm/lightdm.conf
 [SeatDefaults]
 autologin-user=$_OEM_USER
