@@ -170,7 +170,7 @@ cat << OEM_GDM_LOGIN_OPTION > /etc/gdm/custom.conf
 [daemon]
 AutomaticLoginEnable=True
 AutomaticLogin=$_OEM_USER
-OEM_GDM_LOGIN_OPTION 
+OEM_GDM_LOGIN_OPTION
 
 }
 
