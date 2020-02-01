@@ -165,7 +165,7 @@ OEM_SDDM_LOGIN_OPTION
 
 	echo "Configuring GDM...."
 	mkdir /etc/gdm
-	
+
 cat << OEM_GDM_LOGIN_OPTION > /etc/gdm/custom.conf
 [daemon]
 AutomaticLoginEnable=True
@@ -264,4 +264,5 @@ task_setup_ssh_keys		&>> $_LOGFILE
 task_setup_oem_run_once		&>> $_LOGFILE
 task_enable_oem_finish		&>> $_LOGFILE
 task_ensure_oem_auto_login	&>> $_LOGFILE
+task_oem_ensure_elevated_gui	&>> $_LOGFILE
 #task_oem_autounlock_disk	&>> $_LOGFILE
