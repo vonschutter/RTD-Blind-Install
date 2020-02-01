@@ -147,6 +147,8 @@ task_ensure_oem_auto_login() {
 
 	echo "Creating /etc/lightdm/lightdm.conf"
 	mkdir -p /etc/lightdm
+
+	
 cat << OEM_LXDM_LOGIN_OPTION > /etc/lightdm/lightdm.conf
 [SeatDefaults]
 autologin-user=$_OEM_USER
@@ -161,6 +163,12 @@ cat << OEM_SDDM_LOGIN_OPTION > /etc/sddm.conf.d/autologin.conf
 User=$_OEM_USER
 Session=plasma.desktop
 OEM_SDDM_LOGIN_OPTION
+
+cat << OEM_GDM_LOGIN_OPTION > /etc/gdm/custom.conf
+[daemon]
+AutomaticLoginEnable=True
+AutomaticLogin=$_OEM_USER
+OEM_GDM_LOGIN_OPTION 
 
 }
 
