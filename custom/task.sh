@@ -148,7 +148,7 @@ task_ensure_oem_auto_login() {
 	echo "Creating /etc/lightdm/lightdm.conf"
 	mkdir -p /etc/lightdm
 
-	
+
 cat << OEM_LXDM_LOGIN_OPTION > /etc/lightdm/lightdm.conf
 [SeatDefaults]
 autologin-user=$_OEM_USER
@@ -230,6 +230,22 @@ task_oem_autounlock_disk() {
 
 }
 
+
+
+task_oem_ensure_elevated_gui () {
+	# Some Debian and other Linux distribution do not allow gui apps to 
+	# be run when invoked by "sudo" or in a root (system elevated authority) 
+	# environment. To mitigate this some stemp may need to taken. 
+	
+	 
+cat << OEM_ELEVATED_GUI_OPTION > /etc/X11/Xsession.d/10xfree86-common_su
+if [ -z "$XAUTHORITY" ]; then
+XAUTHORITY=$HOME/.Xauthority
+export XAUTHORITY
+fi	
+OEM_ELEVATED_GUI_OPTION
+
+}
 
 
 
