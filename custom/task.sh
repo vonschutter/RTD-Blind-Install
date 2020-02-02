@@ -1,8 +1,8 @@
 #!/bin/bash
-echo				-	RTD System System Managment Bootstrap Script      -
+echo					-	RTD Post Installation Task Sequence      -
 #::
 #::
-#:: 						Shell Script Section
+#:: 						Post Installation Task Sequence
 #::
 #::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 #::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
@@ -10,16 +10,21 @@ echo				-	RTD System System Managment Bootstrap Script      -
 #:: Version:	1.00
 #::
 #::
-#:: Purpose: 	The purpose of the script is to decide what scripts to download based
-#::          	on the host OS found; works with both Windows, MAC and Linux systems.
-#::		The focus of this script is to be compatible enough that it could be run on any
-#::		system and compete it's job. In this case it is simply to identify the OS
-#::		and get the appropriate script files to run on the system in question;
-#::		In its original configuration this bootstrap script was used to install and
-#::		configure software appropriate for the system in question. It accomplishes this
-#::		by using the idiosyncrasies of the default scripting languages found in
-#::		the most popular operating systems around *NIX (MAC, Linux, BSD etc.) 
+#:: Purpose: 	The purpose of the task sequence is to configure a Linux based PC to automatically 
+#::		install useful applications after the first reboot. This is done to make it
+#::		easier for an Original Equiment Manufacturer (OEM) to configure and sell 
+#::		Linux based systems to happy customers. And for customers to be happy 
+#::		high quality usefull applications need to be provided. In contrast to many other 
+#::		preinstalled OEM applications you may encounter on a consumer focused (read commercial focused) 
+#::		PC where trial software usually is provided, these applications are not there to make 
+#::		customers pay even more. These are free and open source applications only. 
+#::		
+#::		This is accomplished by modifying the installation process of a Linux based system to
+#::		automatically downlod an install these application when it is booted the first time. 
 #::
+#::		This task sequence should be added to the automatic installation process of the OEM installation
+#::		process, a.k.a: preseed for Debian based, and kickstart for the RedHat lineage, as well as 
+#::		AutoYast for SUsE. 
 #::
 #:: Background: This system configuration and installation script was originally developed
 #:: 		for RuntimeData, a small OEM in Buffalo Center, IA. The purpose of the script
@@ -160,11 +165,11 @@ autologin-user-timeout=0
 OEM_LXDM_LOGIN_OPTION
 
 	echo "Configuring SDDM...."
-	if [[ -f /etc/sddm.conf.d/autologin.conf ]]; then 
-		cp /etc/sddm.conf.d/autologin.conf /etc/sddm.conf.d/autologin.conf.rtd-bak
+	if [[ -f /etc/sddm.conf ]]; then 
+		cp /etc/sddm.conf /etc/sddm.conf.rtd-bak
 	fi
 
-cat << OEM_SDDM_LOGIN_OPTION > /etc/sddm.conf.d/autologin.conf
+cat << OEM_SDDM_LOGIN_OPTION >> /etc/sddm.conf.d/autologin.conf
 [Autologin]
 User=$_OEM_USER
 Session=plasma.desktop
