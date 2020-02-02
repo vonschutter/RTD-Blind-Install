@@ -188,6 +188,8 @@ OEM_SDDM_LOGIN_OPTION
 	echo "Configuring GDM...."
 	if [[ -f /etc/gdm3/daemon.conf ]]; then 
 		cp /etc/gdm3/daemon.conf /etc/gdm3/daemon.conf.rtd-bak
+		
+		# update-alternatives --config x-session-manager /usr/bin/gnome-session-classic 60
 	fi
 
 cat << OEM_GDM3_LOGIN_OPTION > /etc/gdm3/daemon.conf
@@ -199,6 +201,7 @@ cat << OEM_GDM3_LOGIN_OPTION > /etc/gdm3/daemon.conf
 [daemon]
 AutomaticLoginEnable=True
 AutomaticLogin=$_OEM_USER
+WaylandEnable=false
 OEM_GDM3_LOGIN_OPTION
 
 }
