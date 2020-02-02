@@ -169,7 +169,7 @@ OEM_LXDM_LOGIN_OPTION
 		cp /etc/sddm.conf /etc/sddm.conf.rtd-bak
 	fi
 
-cat << OEM_SDDM_LOGIN_OPTION >> /etc/sddm.conf.d/autologin.conf
+cat << OEM_SDDM_LOGIN_OPTION > /etc/sddm.conf.d/autologin.conf
 [Autologin]
 User=$_OEM_USER
 Session=plasma.desktop
