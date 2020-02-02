@@ -211,7 +211,10 @@ task_oem_ensure_elevated_gui () {
 	# environment. To mitigate this some stemp may need to taken. 
 	# Will work on Slackware as well as Debian to give root permission to open X programs.
 	echo "xhost local:root" >> /home/$_OEM_USER/.bashrc  
-	
+
+	# Allows runing an X program as root
+	touch /root/.bashrc
+	echo "export XAUTHORITY=/home/$_OEM_USER/.Xauthority"
 }
 
 
