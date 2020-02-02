@@ -123,12 +123,12 @@ cat << CREATE_START_LINK > /etc/xdg/autostart/org.runtimedata.oem.cofig.desktop
 # 
 [Desktop Entry]
 Type=Application
-Exec=sudo /opt/rtd/scripts/rtd-oem-linux-config.sh 
+Exec=sudo /opt/rtd/scripts/rtd-oem-linux-config.sh
 Terminal=true
 Hidden=false
 X-GNOME-Autostart-enabled=true
-Name=Rintime Data Configuration Menu
-Comment=start OEM configuration as user when you log in
+Name=Runtime Data Configuration Menu
+Comment=Start OEM configuration as user when you log in
 CREATE_START_LINK
 
 }
@@ -188,8 +188,6 @@ OEM_SDDM_LOGIN_OPTION
 	echo "Configuring GDM...."
 	if [[ -f /etc/gdm3/daemon.conf ]]; then 
 		cp /etc/gdm3/daemon.conf /etc/gdm3/daemon.conf.rtd-bak
-		
-		# update-alternatives --config x-session-manager /usr/bin/gnome-session-classic 60
 	fi
 
 cat << OEM_GDM3_LOGIN_OPTION > /etc/gdm3/daemon.conf
