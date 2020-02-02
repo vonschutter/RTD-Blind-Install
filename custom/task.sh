@@ -214,7 +214,7 @@ task_oem_ensure_elevated_gui () {
 
 	# Allows runing an X program as root
 	touch /root/.bashrc
-	echo "export XAUTHORITY=/home/$_OEM_USER/.Xauthority"
+	echo "export XAUTHORITY=/home/$_OEM_USER/.Xauthority" >>/root/.bashrc
 }
 
 
