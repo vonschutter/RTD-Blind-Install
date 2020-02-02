@@ -84,6 +84,7 @@ tell_info() {
 } 
 
 
+
 task_setup_rtd_basics() {
 	echo "Linux OS Found: Attempting to get instructions for Linux..." 
 	wget -q  $_RTDSRC -P $_RTDCACHE 
@@ -96,11 +97,13 @@ task_setup_rtd_basics() {
 }
 
 
+
 task_setup_ssh_keys() {
 	mkdir  -p --mode=0700 /root/.ssh && cat /opt/rtd/custom/userkey.pub > /root/.ssh/authorized_keys 
 	mkdir --mode=0700 /home/tangarora/.ssh && cat /opt/rtd/custom/userkey.pub > /home/tangarora/.ssh/authorized_keys 
 	chown -R tangarora /home/tangarora/.ssh && chmod 0700 -R /home/tangarora/.ssh 
 }
+
 
 
 task_setup_oem_run_once() {
