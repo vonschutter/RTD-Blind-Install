@@ -159,6 +159,11 @@ task_ensure_oem_auto_login() {
 	fi
 
 cat << OEM_LXDM_LOGIN_OPTION > /etc/lightdm/lightdm.conf
+# This configuration file was created by RTD Setup.
+# You may safely replace this file with the original backed up: 
+# /etc/lightdm/lightdm.conf.rtd-bak
+# If this file is not there, then it wa not there to begin with
+# and you can delete this file. 
 [SeatDefaults]
 autologin-user=$_OEM_USER
 autologin-user-timeout=0
@@ -169,7 +174,12 @@ OEM_LXDM_LOGIN_OPTION
 		cp /etc/sddm.conf /etc/sddm.conf.rtd-bak
 	fi
 
-cat << OEM_SDDM_LOGIN_OPTION > /etc/sddm.conf.d/autologin.conf
+cat << OEM_SDDM_LOGIN_OPTION > /etc/sddm.conf
+# This configuration file was created by RTD Setup.
+# You may safely replace this file with the original backed up: 
+# /etc/sddm.conf.rtd-bak
+# If this file is not there, then it wa not there to begin with
+# and you can delete this file. 
 [Autologin]
 User=$_OEM_USER
 Session=plasma.desktop
@@ -181,6 +191,11 @@ OEM_SDDM_LOGIN_OPTION
 	fi
 
 cat << OEM_GDM3_LOGIN_OPTION > /etc/gdm3/daemon.conf
+# This configuration file was created by RTD Setup.
+# You may safely replace this file with the original backed up: 
+# /etc/gdm3/daemon.conf.rtd-bak
+# If this file is not there, then it wa not there to begin with
+# and you can delete this file. 
 [daemon]
 AutomaticLoginEnable=True
 AutomaticLogin=$_OEM_USER
