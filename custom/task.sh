@@ -127,8 +127,8 @@ Exec=sudo /opt/rtd/scripts/rtd-oem-linux-config.sh
 Terminal=true
 Hidden=false
 X-GNOME-Autostart-enabled=true
-Name=Runtime Data Configuration Menu
-Comment=Start OEM configuration as user when you log in
+Name=RuntimeDataConfigurationMenu
+Comment=OEM
 CREATE_START_LINK
 
 }
