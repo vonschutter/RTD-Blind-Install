@@ -127,7 +127,7 @@ CREATE_START_LINK
 
 
 
-task_enable_oem_finish() {
+task_enable_oem_elevate_priv() {
 	# Add instruction to a sudoers include file:
 	# This should be removed when OEM setup is complete as it would represent a back door... 
 	echo "tangarora ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers.d/99_sudo_include_file
@@ -146,7 +146,9 @@ task_ensure_oem_auto_login() {
 	# on several distributions. 
 
 	echo "Configuring LightDM....."
-	mkdir -p /etc/lightdm
+	if [[ -f /etc/lightdm/lightdm.conf ]]; then 
+		cp /etc/lightdm/lightdm.conf /etc/lightdm/lightdm.conf.rtd-bak
+	fi
 
 cat << OEM_LXDM_LOGIN_OPTION > /etc/lightdm/lightdm.conf
 [SeatDefaults]
@@ -155,7 +157,9 @@ autologin-user-timeout=0
 OEM_LXDM_LOGIN_OPTION
 
 	echo "Configuring SDDM...."
-	mkdir -p /etc/sddm.conf.d
+	if [[ -f /etc/sddm.conf.d/autologin.conf ]]; then 
+		cp /etc/sddm.conf.d/autologin.conf /etc/sddm.conf.d/autologin.conf.rtd-bak
+	fi
 
 cat << OEM_SDDM_LOGIN_OPTION > /etc/sddm.conf.d/autologin.conf
 [Autologin]
@@ -164,16 +168,28 @@ Session=plasma.desktop
 OEM_SDDM_LOGIN_OPTION
 
 	echo "Configuring GDM...."
-	mkdir /etc/gdm
+	if [[ -f /etc/gdm3/daemon.conf ]]; then 
+		cp /etc/gdm3/daemon.conf /etc/gdm3/daemon.conf.rtd-bak
+	fi
 
-cat << OEM_GDM_LOGIN_OPTION > /etc/gdm/custom.conf
+cat << OEM_GDM3_LOGIN_OPTION > /etc/gdm3/daemon.conf
 [daemon]
 AutomaticLoginEnable=True
 AutomaticLogin=$_OEM_USER
-OEM_GDM_LOGIN_OPTION
+OEM_GDM3_LOGIN_OPTION
 
 }
 
+
+
+task_oem_ensure_elevated_gui () {
+	# Some Debian and other Linux distribution do not allow gui apps to 
+	# be run when invoked by "sudo" or in a root (system elevated authority) 
+	# environment. To mitigate this some stemp may need to taken. 
+	# Will work on Slackware as well as Debian to give root permission to open X programs.
+	echo "xhost local:root" >> /home/$_OEM_USER/.bashrc  
+	
+}
 
 
 task_oem_autounlock_disk() {
@@ -234,22 +250,6 @@ task_oem_autounlock_disk() {
 
 
 
-task_oem_ensure_elevated_gui () {
-	# Some Debian and other Linux distribution do not allow gui apps to 
-	# be run when invoked by "sudo" or in a root (system elevated authority) 
-	# environment. To mitigate this some stemp may need to taken. 
-
-
-cat << OEM_ELEVATED_GUI_OPTION > /etc/X11/Xsession.d/10xfree86-common_su
-if [ -z "$XAUTHORITY" ]; then
-XAUTHORITY=$HOME/.Xauthority
-export XAUTHORITY
-fi	
-OEM_ELEVATED_GUI_OPTION
-
-}
-
-
 
 
 #::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
@@ -262,7 +262,7 @@ tell_info			&>> $_LOGFILE
 task_setup_rtd_basics		&>> $_LOGFILE
 task_setup_ssh_keys		&>> $_LOGFILE
 task_setup_oem_run_once		&>> $_LOGFILE
-task_enable_oem_finish		&>> $_LOGFILE
+task_enable_oem_elevate_priv	&>> $_LOGFILE
 task_ensure_oem_auto_login	&>> $_LOGFILE
 task_oem_ensure_elevated_gui	&>> $_LOGFILE
 #task_oem_autounlock_disk	&>> $_LOGFILE
