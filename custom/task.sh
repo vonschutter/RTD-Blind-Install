@@ -62,9 +62,9 @@ _RTDLOGSD=$(if [ -f /opt/rtd/log ]; then echo /opt/rtd/log ; else ( mkdir -p /op
 _RTDSRC=https://github.com/vonschutter/RTD-Build/archive/master.zip
 
 # Determine log file directory
-_ERRLOGFILE=$_RTDLOGSD/post-install-error.log
-_LOGFILE=$_RTDLOGSD/post-install.log
-_STATUSLOG=$_RTDLOGSD/post-install-status.log
+_ERRLOGFILE=$_RTDLOGSD/$( basename $0)-error.log
+_LOGFILE=$_RTDLOGSD/$( basename $0).log
+_STATUSLOG=$_RTDLOGSD/$( basename $0)-status.log
 _OEM_USER=tangarora
 
 
