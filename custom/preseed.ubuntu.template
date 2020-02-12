@@ -344,7 +344,7 @@ tasksel tasksel/first multiselect oem-replace-me-desktop-selection
 d-i pkgsel/include string openssh-server virt-what wget spice-vdagent
 
 # Valid choices for pkgsel/upgrade are: safe-upgrade full-upgrade none
-d-i pkgsel/upgrade select full-upgrade
+d-i pkgsel/upgrade select none
 d-i pkgsel/update-policy select unattended-upgrades
 
 # By default, the system’s locate database will be updated after the
