@@ -99,7 +99,7 @@ d-i console-setup/ask_detect boolean false
 # Network configuration
 # --------------------------------------------------- #
 # Network setup. This can be a static setup or dhcp. 
-d-i netcfg/choose_interface select auto
+d-i netcfg/choose_interface select manual
 d-i netcfg/hostname string RTD-Client
 d-i netcfg/get_hostname string unassigned-hostname
 d-i netcfg/get_domain string unassigned-domain
