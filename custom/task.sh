@@ -280,7 +280,6 @@ rtd_oem_reseal () {
 
 	if cat /etc/os-release |grep ubuntu ; then
 		InstallSoftwareFromRepo oem-config
-		oem-config
 	elif cat /etc/os-release |grep debian ; then
 		echo "I dont know of any OEM configuration for Debian"
 	elif cat /etc/os-release |grep suse ; then
