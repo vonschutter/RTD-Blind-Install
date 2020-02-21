@@ -276,7 +276,7 @@ task_oem_autounlock_disk() {
 }
 
 
-rtd_oem_reseal () {
+task_rtd_oem_reseal () {
 
 	if cat /etc/os-release |grep ubuntu ; then
 		InstallSoftwareFromRepo oem-config
@@ -288,6 +288,8 @@ rtd_oem_reseal () {
 		echo "I dont know of any OEM configuration for Fedora"	
 	fi
 }
+
+
 
 
 #::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
@@ -303,5 +305,6 @@ task_setup_oem_run_once		&>> $_LOGFILE
 task_enable_oem_elevate_priv	&>> $_LOGFILE
 task_ensure_oem_auto_login	&>> $_LOGFILE
 task_oem_ensure_elevated_gui	&>> $_LOGFILE
-rtd_oem_reseal			&>> $_LOGFILE
+task_rtd_oem_reseal		&>> $_LOGFILE
 #task_oem_autounlock_disk	&>> $_LOGFILE
+
