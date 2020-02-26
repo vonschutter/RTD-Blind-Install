@@ -139,6 +139,8 @@ d-i mirror/http/proxy string
 # Uncomment below to enable install of a different suite:
 # d-i mirror/suite string [testing, stable, unstable]
 # d-i mirror/udeb/suite string [testing, stable, unstable]
+d-i mirror/suite string testing
+
  
 # --------------------------------------------------- #
 
