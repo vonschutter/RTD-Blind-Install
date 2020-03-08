@@ -109,7 +109,7 @@ d-i hw-detect/load_firmware boolean true
 # without sucessful dhcp configuration
 d-i netcfg/dhcp_failed note
 d-i netcfg/dhcp_options select Configure network manually
-# d-i netcfg/dhcp_timeout string 60
+d-i netcfg/dhcp_timeout string 60
 
 # IPv4 Static reserve configuration:
 # d-i netcfg/get_ipaddress string 192.168.1.233
@@ -119,10 +119,11 @@ d-i netcfg/dhcp_options select Configure network manually
 # d-i netcfg/confirm_static boolean true
 
 d-i netcfg/wireless_show_essids select manual
-d-i netcfg/wireless_essid string loader
-d-i netcfg/wireless_essid_again string loader
+d-i netcfg/wireless_essid string
+d-i netcfg/wireless_essid_again string 
 d-i netcfg/wireless_security_type select wpa
-d-i netcfg/wireless_wpa string letmein1234
+d-i netcfg/wireless_wpa string 
+#letmein1234
 
 # --------------------------------------------------- #
 
