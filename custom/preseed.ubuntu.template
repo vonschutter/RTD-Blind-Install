@@ -271,7 +271,7 @@ d-i partman-auto/expert_recipe string                         \
                       mountpoint{ /boot }                     \
                                                               \
               .                                               \
-              2000 2000 2000 linux-swap                       \
+              2000 2000 300% linux-swap                       \
                       $lvmok{ } lv_name{ swap }               \
                       in_vg { crypt }                         \
                       $primary{ }                             \
