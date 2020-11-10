@@ -34,4 +34,4 @@ or simply type the following in a new terminal:
 ```
 rtd-blind-install
 ```
-Since ~/bin wil usually be prepended in you path on Ubuntu.
+Since ~/bin wil usually be prepended in your path on Ubuntu.
