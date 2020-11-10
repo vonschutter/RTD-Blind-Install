@@ -26,7 +26,7 @@ To install and use this tool cut and baste the line below in to a terminal on yo
 mkdir -p ~/bin && wget https://github.com/vonschutter/RTD-Blind-Install/raw/master/rtd-blind-install -O ~/bin && chmod +x ~/bin/rtd-blind-install && echo All done! 
 ```
 
-The simply run the script by typing:
+Then simply run the script by typing:
 ```
 ~/bin/rtd-blind-install
 ```
@@ -34,4 +34,4 @@ or simply type the following in a new terminal:
 ```
 rtd-blind-install
 ```
-Since ~/bin wil usually be prepended in your path on Ubuntu.
+Since ~/bin will usually be prepended in your path on Ubuntu.
