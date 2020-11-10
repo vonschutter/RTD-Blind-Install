@@ -28,5 +28,9 @@ mkdir -p ~/bin && wget https://github.com/vonschutter/RTD-Blind-Install/raw/mast
 
 The simply run the script by typing:
 ```
-"bash bin/rtd-mc". 
+~/bin/rtd-blind-install
+```
+or simply type the following in a new terminal: 
+```
+~/bin/rtd-blind-install
 ```
