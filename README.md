@@ -32,5 +32,6 @@ The simply run the script by typing:
 ```
 or simply type the following in a new terminal: 
 ```
-~/bin/rtd-blind-install
+rtd-blind-install
 ```
+Since ~/bin wil usually be prepended in you path on Ubuntu.
