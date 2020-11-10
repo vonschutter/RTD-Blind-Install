@@ -1,4 +1,4 @@
-# Blind_Install (Automatic network install ISO creator)
+# Automatic network install ISO creator for Linux
 ![RTD Blind Install Media Builder](custom/rtd-mc.png?raw=true "Executing the Script")
 
 Automatic Ubuntu/Kubuntu network install ISO creator.
@@ -20,6 +20,11 @@ Simply use this virtual CD, in a virtual machine or use a handy tool to burn it 
 To use this tool, simply download the "rtd-mc" file along with the "custom" folder. This may be done using the "Clone/Download" button on this page. Then extract the files to a handy location. It is recommended to place them in a folder called "bin" in your home folder on Linux since scripts in here will be avaiable in any terminal started after executable files are placed there. 
 
 The "custom" folder contains configurations etc. that will be included in the bootable media. Please feel free to alter these to your liking; notably the pre-populated passwords. 
+
+To install and use this tool cut and baste the line below in to a terminal on your Linux machine:
+```
+mkdir -p ~/bin && wget https://github.com/vonschutter/RTD-Blind-Install/raw/master/rtd-blind-install -O ~/bin && chmod +x ~/bin/rtd-blind-install && echo All done! 
+```
 
 The simply run the script by typing:
 ```
