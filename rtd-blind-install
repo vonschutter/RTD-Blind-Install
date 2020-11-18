@@ -345,7 +345,7 @@ rtd_oem_ubuntu_auto_install_iso_builder()
 	cat >> $auto/ks.cfg <<-EOF
 	%post --nochroot
 	mkdir -p /target/home/$SUDO_USER/.ssh/
-	echo $(cat  ${SSH_PUBLIC_KEY_FILE ) >> /target/home/$SUDO_USER/.ssh/authorized_keys
+	echo $(cat  ${SSH_PUBLIC_KEY_FILE} ) >> /target/home/$SUDO_USER/.ssh/authorized_keys
 	chown -R $SUDO_USER /target/home/$SUDO_USER/.ssh/
 	setv() { sed -i "s/^\(\$2=\).*/\1\$3/" \$1; }
 	cd /target/etc/default
@@ -355,7 +355,8 @@ rtd_oem_ubuntu_auto_install_iso_builder()
 	%end
 	EOF
 
-#	rtd_oem_setup_brand_splash_screen
+
+	# rtd_oem_setup_brand_splash_screen
 
 
 	if [[ -f $PUT_ISO_FILE_HERE_WHEN_DONE/$auto.iso ]]; then 
@@ -649,7 +650,7 @@ is_software_package_available () {
 	elif hash apt 2>/dev/null; then
 		apt -qq list "$1" 2>/dev/null | grep -q "$1" && return 0 || return 1
 	elif hash zypper 2>/dev/null; then
-		return zypper info "$1" &> /dev/null && return 0 || return 1
+		zypper info "$1" &> /dev/null && return 0 || return 1
 	else
 		return 3
 	fi
@@ -739,7 +740,7 @@ rtd_update_system () {
         log_item ()
         {
                 DATE=$(date '+%d/%m/%Y %H:%M:%S');
-                echo "$DATE --- : $@" >> $LOGFILE
+                echo "$DATE --- : $@" >> "$LOGFILE"
         }
 
         deb_software_task ()
@@ -748,7 +749,7 @@ rtd_update_system () {
                 # make some decent display terminal graphics...
                 PAD="------------------------------------------"
                 LINE=$(printf "%s %s" "$@" "$PAD" | cut -c 1-${#PAD})
-                echo -ne "--- Executing "$LINE"":""\ & $@ >>$LOGFILE 2>&1 && printf "%b%-6s%b [ \xE2\x9C\x94 ] $GREEN OK!$ENDCOLOR   \n" ||printf "%b%-6s%b [ ! ] $RED FAILED $ENDCOLOR  \n"
+                echo -ne "--- Executing "$LINE"":""\ & "$@" >>$LOGFILE 2>&1 && printf "%b%-6s%b [ \xE2\x9C\x94 ] $GREEN OK!$ENDCOLOR   \n" ||printf "%b%-6s%b [ ! ] $RED FAILED $ENDCOLOR  \n"
         }
         # Update native software packages; since it is not known what distribution
 	# this script is being executed on, it is best to check and see if we are able
