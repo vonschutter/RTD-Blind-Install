@@ -1,5 +1,5 @@
 #!/bin/bash
-echo					-	RTD Post Installation Task Sequence      -
+echo					-	RTD Post Installation Task Sequence	-
 #::
 #::
 #:: 						Post Installation Task Sequence
@@ -201,6 +201,31 @@ AutomaticLoginEnable=True
 AutomaticLogin=$_OEM_USER
 WaylandEnable=false
 OEM_GDM3_LOGIN_OPTION
+
+	# Ensure login even if there is aonly a terminal session.
+	mkdir -p /etc/systemd/system/getty@tty1.service.d
+	
+	if [ ! -f /etc/systemd/system/getty@tty1.service.d/override.conf ]; then
+		echo "***********  Updating Autologin information... ************ "
+		echo "[Service]" > /etc/systemd/system/getty@tty1.service.d/override.conf
+		echo "ExecStart=" >> /etc/systemd/system/getty@tty1.service.d/override.conf
+		echo "ExecStart=-/sbin/agetty --noissue --autologin $SUDO_USER %I $TERM" >> /etc/systemd/system/getty@tty1.service.d/override.conf
+		echo "Type=idle" >> /etc/systemd/system/getty@tty1.service.d/override.conf
+	else 
+		echo "/etc/systemd/system/getty@tty1.service.d/override.conf is already present... "
+	fi
+
+
+	if [ ! $(cat $SUDO_USER/.bashrc |grep rtd-start-vpn-router)  ]; then 
+		echo "**********    Seting up vpn router to start automatically   ************* "
+		echo "if [ -f ~/bin/rtd-start-vpn-router ]; then" >>$SUDO_USER/.bashrc 
+		echo "bash ~/bin/rtd-start-vpn-router" $SUDO_USER/.bashrc 
+		echo "fi"  >> $SUDO_USER/.bashrc 
+	else 
+		echo "$SUDO_USER/.bashrc already updated... "
+	fi
+
+
 
 }
 
