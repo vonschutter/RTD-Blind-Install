@@ -110,11 +110,10 @@ function download_and_manipulate_iso () {
 	cd "$TMP_DISC_DIR" || echo Failed to change to tem disk dir: "$TMP_DISC_DIR"
 	dos2unix "./isolinux.cfg"
 	patch -p1 -i "$SCRIPT_DIR/custom/boot-menu.patch"
-	cat "$SCRIPT_DIR/custom/preseed.template" > "$SCRIPT_DIR/custom/preseed.cfg"
+	cat "$SCRIPT_DIR/custom/preseed.template" > "$TMP_INITRD_DIR/custom/preseed.cfg"
 	sed -i s/oem-replace-me-desktop-selection/$PREFERENCE/g "$SCRIPT_DIR/custom/preseed.cfg"
 	cd "$TMP_INITRD_DIR" || echo Failed to change to initrd dir: "$TMP_INITRD_DIR"
 	mkdir custom
-	cp "$SCRIPT_DIR/custom/preseed.cfg" "./preseed.cfg"
 	cp "$SSH_PUBLIC_KEY_FILE" "./custom/userkey.pub"
 	cp "$SCRIPT_DIR/custom/ssh-host-keygen.service" "./custom/ssh-host-keygen.service"
 	cat "$TMP_DISC_DIR/initrd.gz" | gzip -d > "./initrd"
