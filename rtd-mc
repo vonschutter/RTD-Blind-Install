@@ -3,7 +3,7 @@
 #::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 #::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 #:: Author:     SLS 
-#:: Version 1.00
+#:: Version 1.01
 #::
 #::
 #:: Purpose: The purpose of the script is to facilitate generating an unattended installation iso file for installing 
@@ -139,7 +139,7 @@ function cleanup_and_finish () {
 	rm -r "$TMP_DOWNLOAD_DIR"
 	rm -r "$TMP_DISC_DIR"
 	rm -r "$TMP_INITRD_DIR"
-	dialog --backtitle "RTD OEM System Builder" --title "DONE" --msgbox "$COMPLETION_MESSAGE" 10 60
+	dialog --backtitle "RTD OEM System Builder" --title "DONE" --msgbox "$COMPLETION_MESSAGE" 0 0
 	clear
 }
 
@@ -157,7 +157,7 @@ function _show_gui () {
 		selection=$(dialog \
 			--backtitle "RTD Media Creator" \
 			--title "$BRANDING" \
-			--menu "Select task:" 0 0 15 \
+			--menu "Select task:" 0 0 10 \
 				"1" "Genterate an Automatic Standard Ubuntu Installer ISO (Burn to CD, USB, or use with VM)" \
 				"2" "Genterate an Automatic KDE      Ubuntu Installer ISO (Burn to CD, USB, or use with VM)" \
 				"3" "Genterate an Automatic Gnome    Ubuntu Installer ISO (Burn to CD, USB, or use with VM)" \
