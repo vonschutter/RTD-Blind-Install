@@ -3,7 +3,7 @@
 #::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 #::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 #:: Author:     SLS 
-#:: Version 1.01
+    Version=1.01
 #::
 #::
 #:: Purpose: The purpose of the script is to facilitate generating an unattended installation iso file for installing 
@@ -125,7 +125,6 @@ function create_iso_image (){
 		rm -f "$TARGET_ISO"
 	fi
 	echo going to exe:
-	echo "$BIN_XORRISO -as mkisofs -r -V $VOLUME_TITLE -J -b isolinux.bin -c boot.cat -no-emul-boot -boot-load-size 4 -boot-info-table -input-charset utf-8 -isohybrid-mbr $SCRIPT_DIR/custom/isohdpfx.bin -eltorito-alt-boot -e boot/grub/efi.img -no-emul-boot -isohybrid-gpt-basdat -o $TARGET_ISO ./"
 	cd "$TMP_DISC_DIR" || ( echo Failed to change to temp disk dir: "$TMP_DISC_DIR"; exit 1 )
 	rm -r '[BOOT]'
 	"$BIN_XORRISO" -as mkisofs -r -V "$VOLUME_TITLE" -J -b isolinux.bin -c boot.cat -no-emul-boot -boot-load-size 4 -boot-info-table -input-charset utf-8 -isohybrid-mbr "$SCRIPT_DIR/custom/isohdpfx.bin" -eltorito-alt-boot -e boot/grub/efi.img -no-emul-boot -isohybrid-gpt-basdat -o "$TARGET_ISO" ./
@@ -155,7 +154,7 @@ function _show_gui () {
 	while true; do
 		exec 3>&1
 		selection=$(dialog \
-			--backtitle "RTD Media Creator" \
+			--backtitle "RTD Media Creator 							Version: $Versoion" \
 			--title "$BRANDING" \
 			--menu "Select task:" 0 0 10 \
 				"1" "Genterate an Automatic Standard Ubuntu Installer ISO (Burn to CD, USB, or use with VM)" \
