@@ -5,12 +5,12 @@ Automatic Ubuntu/Kubuntu network install ISO creator.
 
 Makes an ISO (Virtual CD) that will blindly install the Ubuntu flavor of choice on to a PC or a VM, no questions asked. 
 
-All chices have been made for you: 
+All choices have been made for you: 
  ```
 1 - All configuration decissions have been set to sensible ones
 2 - Full disk encryption is enabled by default
 !WARNING!  The PC that is booted from this media will be wiped completely! 
-           There will be no prompt or warning! 
+           **There will be no prompt or warning!** 
 
 The installation media (ISO) vill be placed in your home folder. 
  ```
