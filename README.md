@@ -28,10 +28,10 @@ mkdir -p ~/bin/custom && cd ~/bin && wget https://github.com/vonschutter/RTD-Bli
 
 Then simply run the script by typing:
 ```
-~/bin/rtd-blind-install
+~/bin/rtd-mc
 ```
 or simply type the following in a new terminal: 
 ```
-rtd-blind-install
+rtd-mc
 ```
 Since ~/bin will usually be prepended in your path on Ubuntu.
