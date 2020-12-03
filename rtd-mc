@@ -157,7 +157,7 @@ function _show_gui () {
 		selection=$(dialog \
 			--backtitle "RTD Media Creator" \
 			--title "$BRANDING" \
-			--menu "Select task:" 0 0 8 \
+			--menu "Select task:" 0 0 15 \
 				"1" "Genterate an Automatic Standard Ubuntu Installer ISO (Burn to CD, USB, or use with VM)" \
 				"2" "Genterate an Automatic KDE      Ubuntu Installer ISO (Burn to CD, USB, or use with VM)" \
 				"3" "Genterate an Automatic Gnome    Ubuntu Installer ISO (Burn to CD, USB, or use with VM)" \
