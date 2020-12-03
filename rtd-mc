@@ -32,7 +32,7 @@
 # setings. 
 
 # Set default release version... 
-RELEASE=eoan
+RELEASE=focal
 TARGET_ISO_FILE_NAME=$RELEASE-netinstall-auto.iso
 SOURCE_ISO_URL="http://archive.ubuntu.com/ubuntu/dists/$RELEASE/main/installer-amd64/current/images/netboot/mini.iso"
 SSH_PUBLIC_KEY_FILE="$HOME/.ssh/id_rsa.pub"
@@ -237,7 +237,7 @@ function _show_gui () {
 #
 #
 # Ensure administrative privileges.
-[ "$UID" -eq 0 ] || echo -e $YELLOW "This script needs administrative access..." $ENDCOLOR
+[ "$UID" -eq 0 ] || echo -e $YELLOW "This script ( ${0##*/} ) needs administrative access..." $ENDCOLOR
 [ "$UID" -eq 0 ] || exec sudo bash "$0" "$@"
 
 _show_gui

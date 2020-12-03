@@ -23,7 +23,7 @@ The "custom" folder contains configurations etc. that will be included in the bo
 
 To install and use this tool cut and baste the line below in to a terminal on your Linux machine:
 ```
-mkdir -p ~/bin/custom && cd ~/bin && wget https://github.com/vonschutter/RTD-Blind-Install/archive/master.zip -O master.zip && unzip -o master.zip -x *.png *.md *.yml -d ~/bin && mv ./RTD-Blind-Install-master/* . && rm -r ./RTD-Blind-Install-master && chmod +x rtd-mc && ./rtd-mc
+mkdir -p ~/bin/custom && cd ~/bin && wget https://github.com/vonschutter/RTD-Blind-Install/archive/master.zip -O master.zip && unzip -o master.zip -x *.png *.md *.yml -d ~/bin && mv ./RTD-Blind-Install-master/* . && rm -rf ./RTD-Blind-Install-master ./master.zip && chmod +x rtd-mc && ./rtd-mc
 ```
 
 Then simply run the script by typing:
