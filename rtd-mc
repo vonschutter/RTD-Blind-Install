@@ -41,7 +41,6 @@ VOLUME_TITLE="RTD Ubuntu Auto Installer"
 COMPLETION_MESSAGE="Your ISO image is ready! It is placed in the folder: $PUT_ISO_FILE_HERE_WHEN_DONE Next steps: Add the ISO to a bootable USB (for example MULTIBOOT from Pendrive Linux), or if you are using Virtual Machines select the ISO as install media and install system, login as the temporary user, adjust passwords for the encrypted volume and login... "
 
 
-# source /opt/rtd/scripts/_rtd_functions
 
 #::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 #::::::::::::::                                          ::::::::::::::::::::::
@@ -49,6 +48,7 @@ COMPLETION_MESSAGE="Your ISO image is ready! It is placed in the folder: $PUT_IS
 #::::::::::::::                                          ::::::::::::::::::::::
 #::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 #
+
 function prepare_environment_for_iso_creation () {
     # Facilitate showing collorfull statements in terminal... 
     set_colors
@@ -83,6 +83,28 @@ function prepare_environment_for_iso_creation () {
     TMP_DOWNLOAD_DIR="$(mktemp -d)"
     TMP_DISC_DIR="$(mktemp -d)"
     TMP_INITRD_DIR="$(mktemp -d)"
+}
+
+
+function check_dependencies (){
+	# Simple function to check if sofware is available and take action 
+	# if it is not. Software name must match command to envoke it.
+	#---------------------------------------------------------------
+	echo "Checking for script dependencies and install if not there..."
+	#---------------------------------------------------------------
+	if hash "$1" 2>/dev/null; then
+		echo "I found that $1 is present on this system... thankyou for that! "
+	else
+		echo "You seem to have no $1... I will try to get it... "
+		sudo apt install -y "$1"
+		if [ $? != 0 ];
+		then
+			echo "That install didn't work out so well."
+			echo "Please manually try to add the software since I couldn't do it."
+			exit 1
+		fi
+		echo "OK Done! Continuing..."
+	fi
 }
 
 
@@ -228,8 +250,6 @@ function _show_gui () {
 # Ensure administrative privileges.
 [ "$UID" -eq 0 ] || echo -e $YELLOW "This script needs administrative access..." $ENDCOLOR
 [ "$UID" -eq 0 ] || exec sudo bash "$0" "$@"
-
-PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1"
 
 _show_gui
 
