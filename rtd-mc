@@ -154,7 +154,7 @@ function _show_gui () {
 	while true; do
 		exec 3>&1
 		selection=$(dialog \
-			--backtitle "RTD Media Creator 							Version: $Versoion" \
+			--backtitle "	RTD Media Creator 							Version: $Version" \
 			--title "$BRANDING" \
 			--menu "Select task:" 0 0 10 \
 				"1" "Genterate an Automatic Standard Ubuntu Installer ISO (Burn to CD, USB, or use with VM)" \
