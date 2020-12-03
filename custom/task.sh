@@ -62,9 +62,7 @@ _RTDLOGSD=$(if [ -f /opt/rtd/log ]; then echo /opt/rtd/log ; else ( mkdir -p /op
 _RTDSRC=https://github.com/vonschutter/RTD-Build/archive/master.zip
 
 # Determine log file directory
-_ERRLOGFILE=$_RTDLOGSD/$( basename $0)-error.log
 _LOGFILE=$_RTDLOGSD/$( basename $0).log
-_STATUSLOG=$_RTDLOGSD/$( basename $0)-status.log
 _OEM_USER=tangarora
 
 
@@ -105,8 +103,8 @@ task_setup_rtd_basics() {
 
 task_setup_ssh_keys() {
 	mkdir  -p --mode=0700 /root/.ssh && cat /opt/rtd/custom/userkey.pub > /root/.ssh/authorized_keys 
-	mkdir --mode=0700 /home/tangarora/.ssh && cat /opt/rtd/custom/userkey.pub > /home/tangarora/.ssh/authorized_keys 
-	chown -R tangarora /home/tangarora/.ssh && chmod 0700 -R /home/tangarora/.ssh 
+	mkdir --mode=0700 /home/$_OEM_USER/.ssh && cat /opt/rtd/custom/userkey.pub > /home/$_OEM_USER/.ssh/authorized_keys 
+	chown -R $_OEM_USER /home/$_OEM_USER/.ssh && chmod 0700 -R /home/$_OEM_USER/.ssh 
 }
 
 
@@ -138,7 +136,7 @@ CREATE_START_LINK
 task_enable_oem_elevate_priv() {
 	# Add instruction to a sudoers include file:
 	# This should be removed when OEM setup is complete as it would represent a back door... 
-	echo "tangarora ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers.d/99_sudo_include_file
+	echo "$_OEM_USER ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers.d/99_sudo_include_file
 
 	# Check that your sudoers include file passed the visudo syntax checks:
 	sudo visudo -cf /etc/sudoers.d/99_sudo_include_file
