@@ -41,7 +41,6 @@ VOLUME_TITLE="RTD Ubuntu Auto Installer"
 COMPLETION_MESSAGE="Your ISO image is ready! It is placed in the folder: $PUT_ISO_FILE_HERE_WHEN_DONE Next steps: \n Add the ISO to a bootable USB (for example MULTIBOOT from Pendrive Linux), or if you are using Virtual Machines select the ISO as install media and install system, login as the temporary user, adjust passwords for the encrypted volume (letmein1234) and login (letmein)... DO NOT leave them as they are!"
 BACKTITLE="RTD Media Creator 	Version: $Version"
 
-
 #::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 #::::::::::::::                                          ::::::::::::::::::::::
 #::::::::::::::          Script Functions                ::::::::::::::::::::::
