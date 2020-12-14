@@ -1,8 +1,8 @@
 # Automatic network install ISO creator for Linux
 ![RTD Blind Install Media Header](custom/header-time.jpg "Executing the Script")
-Automatic Ubuntu/Kubuntu network install ISO creator. 
-
+Automatic Ubuntu/Kubuntu network installer virtual media (ISO) creator. 
 Makes an ISO (Virtual CD) that will blindly install the Ubuntu flavor of choice on to a PC or a VM, no questions asked. 
+Be very careful with this media: booting from it will ERACE the comuter that it is booted on.
 
 ![RTD Blind Install Media Builder](custom/rtd-mc.png?raw=true "Executing the Script")
 
